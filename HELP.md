@@ -91,3 +91,18 @@ These additional references should also help you:
 >>>repository : Database 접속 주체
 
 >>>service : 비지니스 로직 처리를 위한 클래스 모음
+
+
+7) 프로그램 실행
+   -> 구성 -> 편집 클릭
+![img_1.png](img_1.png)
+
+왼쪽 + 클릭
+![img.png](img.png)
+그림 처럼 SpringBoot 추가
+
+이름: 해당 Main Class파일이름 추가
+-cp 부분 Main 추가
+
+아래 클래스 패스는 
+패키지명 포함  Main Class파일이름 추가
