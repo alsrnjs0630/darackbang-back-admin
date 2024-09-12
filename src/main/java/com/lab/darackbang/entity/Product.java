@@ -148,4 +148,8 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> productImages;
+
+    @OneToMany(mappedBy = "product")
+    private List<Subscribe> subscribes;
+
 }
