@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Builder
@@ -71,4 +72,16 @@ public class Subscribe {
     @Column(name = "updated_date", nullable = false)
     @LastModifiedDate
     private LocalDate updatedDate;
+
+    // payment (결제) 테이블 매핑 설정
+    @OneToMany(mappedBy = "subscribe")
+    private List<Payment> payments;
+
+    // delivery (배송) 테이블 매핑 설정
+    @OneToMany(mappedBy = "subscribe")
+    private List<Delivery> deliveries;
+
+    // exchagne (교환) 테이블 매핑 설정
+    @OneToMany(mappedBy = "subscribe")
+    private List<Exchange> exchanges;
 }
