@@ -146,10 +146,11 @@ public class Product {
     @LastModifiedDate
     private LocalDate updatedDate;
 
+    //productImages 매핑 설정
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> productImages;
 
-    // subscribe 외래키 설정
+    //subscribes 매핑 설정
     @OneToMany(mappedBy = "product")
     private List<Subscribe> subscribes;
 
