@@ -71,3 +71,23 @@ These additional references should also help you:
 
    >ALTER USER darackbangadmin ACCOUNT UNLOCK;
 
+6) 사용자 계정 설정
+>프로젝트 구조
+>>com.lab.darackbang
+
+>>>common  : 공통적ㅇ로 사용하는 클래스 모음
+>>>>utils : 공동적으로 사용하는 함수들 모음
+
+>>>config : SpringSecurity 설정등의 다양한 설정파일 위치
+
+>>>controller : 프론트와 통신을 위한 제어클래스 모음
+
+>>>dto : 프론트와 통시시 사용하는 데이터 객체들의 집합
+
+>>>entity : Database와 연동을 위한 객체
+
+>>>mapper : entity 와 DTO 간 상호 변환을 위한 클래스 모음
+
+>>>repository : Database 접속 주체
+
+>>>service : 비지니스 로직 처리를 위한 클래스 모음
