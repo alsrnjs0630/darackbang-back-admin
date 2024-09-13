@@ -1,10 +1,13 @@
 package com.lab.darackbang.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,7 +21,6 @@ import java.util.List;
 @EqualsAndHashCode
 @Table(name = "tbl_member")
 public class Member {
-
     // 회원 아이디, 시퀀스 생성
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -110,19 +112,31 @@ public class Member {
     @LastModifiedDate
     private LocalDate updatedDate;
 
-    // memberRole 테이블 (회원롤) 외래키 설정
+    // memberRole 테이블 (회원롤) 매핑 설정
     @OneToMany(mappedBy = "member")
     private List<MemberRole> memberRoles;
 
-    // memberCard 테이블 (회원카드정보) 외래키 설정
+    // memberCard 테이블 (회원카드정보) 매핑 설정
     @OneToOne(mappedBy = "member")
     private MemberCard memberCard;
 
-    // subscribe 테이블 (구독) 외래키 설정
+    // subscribe 테이블 (구독) 매핑 설정
     @OneToMany(mappedBy = "member")
+    @JsonIgnoreProperties( // 엔티티를 가져 올 때 리스트안에 리스트가 있는 것들
+            value = {"payments", "deliveries", "exchanges"},
+            ignoreUnknown = true // 매핑할 때 엔티티에 선언되지 않은 필드값을 무시
+    )
     private List<Subscribe> subscribes;
 
-    // 구매내역 테이블 (구매내역) 외래키 설정
+    // 구매내역 테이블 (구매내역) 매핑 설정
     @OneToMany(mappedBy = "member")
     private List<OrderHistory> orderHistories;
+
+    // 장바구니 테이블 (cart) 매핑 설정
+    @OneToMany(mappedBy = "member")
+    private List<Cart> carts;
+
+    // QandA 테이블 (qanda) 매핑 설정
+    @OneToMany(mappedBy = "member")
+    private List<Qanda> qandas;
 }

@@ -29,5 +29,5 @@ public class CommonCode {
 
     // 사용여부 (default 1 : 사용, 0 : 미사용)
     @Column(name = "is_used", nullable = false, length = 1)
-    private Integer isUsed = 1;
+    private Boolean isUsed = true;
 }

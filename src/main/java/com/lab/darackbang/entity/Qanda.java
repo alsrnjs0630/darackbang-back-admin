@@ -5,7 +5,9 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Builder
@@ -15,10 +17,9 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Table(name = "tbl_wishlist")
-public class WishList {
-
-    // 관심상품아이디
+@Table(name = "tbl_qanda")
+public class Qanda {
+    // QandA 아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -34,7 +35,16 @@ public class WishList {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    // 삭제유무 ( default 0 : 등록, 1 : 삭제 )
+    // 제목
+    @Column(name = "title", nullable = false, length = 50)
+    private String title;
+
+    // 내용
+    @Column(name = "contents", nullable = false, length = 1000)
+    private String contents;
+
+    // 삭제 유무 (default 0 : 등록, 1: 삭제)
+    @Builder.Default
     @Column(name = "is_deleted", nullable = false, length = 1)
     private Boolean isDeleted = false;
 
@@ -47,4 +57,13 @@ public class WishList {
     @Column(name = "updated_date", nullable = false)
     @LastModifiedDate
     private LocalDate updatedDate;
+
+    // QandA 이미지 (qanda_image)테이블 매핑 설정
+    @OneToMany(mappedBy = "qanda")
+    private List<QandaImage> qandaImages;
+
+    // QandA 답글 테이블 매핑 설정
+    @OneToOne(mappedBy = "qanda")
+    private QandaComment qandaComment;
+
 }

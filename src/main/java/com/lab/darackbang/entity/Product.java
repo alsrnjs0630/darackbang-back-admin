@@ -93,7 +93,7 @@ public class Product {
     //삭제유무
     @Column(name = "is_deleted", nullable = false, length = 1)
     @Builder.Default
-    private Boolean isDeleted = Boolean.FALSE;
+    private Boolean isDeleted = false;
 
     //품절유무
     @Column(name = "is_soldout", nullable = false, length = 1)
@@ -153,5 +153,13 @@ public class Product {
     //subscribes 매핑 설정
     @OneToMany(mappedBy = "product")
     private List<Subscribe> subscribes;
+
+    // 장바구니 테이블 (cart) 매핑 설정
+    @OneToMany(mappedBy = "product")
+    private List<Cart> carts;
+
+    // QandA 테이블 (qanda) 매핑 설정
+    @OneToMany(mappedBy = "product")
+    private List<Qanda> qandas;
 
 }

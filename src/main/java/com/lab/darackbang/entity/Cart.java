@@ -15,10 +15,9 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Table(name = "tbl_wishlist")
-public class WishList {
-
-    // 관심상품아이디
+@Table(name = "tbl_cart")
+public class Cart {
+    // 장바구니아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -34,9 +33,13 @@ public class WishList {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    // 삭제유무 ( default 0 : 등록, 1 : 삭제 )
-    @Column(name = "is_deleted", nullable = false, length = 1)
-    private Boolean isDeleted = false;
+    // 구매수량
+    @Column(name = "product_quantity", nullable = false, length = 7)
+    private Integer productQuantity;
+
+    // 상품금액
+    @Column(name = "product_total_price", nullable = false, length = 7)
+    private Integer productTotalPrice;
 
     // 등록일
     @Column(name = "created_date", nullable = false)
