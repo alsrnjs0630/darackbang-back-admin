@@ -24,6 +24,11 @@ public class OrderHistory {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    // 회원아이디
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
     //구매일
     @Column(name = "order_date", nullable = false)
     private LocalDate orderDate;

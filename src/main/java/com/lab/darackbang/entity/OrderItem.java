@@ -23,11 +23,6 @@ public class OrderItem {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    // 회원 아이디
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
-
     //상품 아이디
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id", nullable = false)

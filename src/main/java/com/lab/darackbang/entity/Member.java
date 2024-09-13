@@ -121,4 +121,8 @@ public class Member {
     // subscribe 테이블 (구독) 외래키 설정
     @OneToMany(mappedBy = "member")
     private List<Subscribe> subscribes;
+
+    // 구매내역 테이블 (구매내역) 외래키 설정
+    @OneToMany(mappedBy = "member")
+    private List<OrderHistory> orderHistories;
 }
