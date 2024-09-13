@@ -31,7 +31,7 @@ public class MemberRepositoryTest {
                     .password("1234")
                     .name("user"+String.valueOf(i))
                     .birthday("20240302")
-                    .ageGroup(20)
+                    .ageGroup("20")
                     .gender("F")
                     .mobileNo("01028810137")
                     .mileage(0)
