@@ -138,6 +138,14 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Qanda> qandas;
 
+    // 관심상품 테이블 매핑 설정
+    @OneToMany(mappedBy = "member")
+    private List<WishList> wishlists;
+
+    // 구매후기 테이블 매핑 설정
+    @OneToMany(mappedBy = "member")
+    private List<ProductReview> productReviews;
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +

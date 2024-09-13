@@ -109,8 +109,8 @@ public class Product {
     private Integer quantity;
 
     //상품포장수량
-    @Column(name = "package_quatity", nullable = true, length = 7)
-    private Integer packageQuatity;
+    @Column(name = "package_quatnity", nullable = true, length = 7)
+    private Integer packageQuantity;
 
     //소비기한
     @Column(name = "expiration_date", nullable = false)
@@ -161,5 +161,17 @@ public class Product {
     // QandA 테이블 (qanda) 매핑 설정
     @OneToMany(mappedBy = "product")
     private List<Qanda> qandas;
+
+    // 구매후기 테이블 매핑 설정
+    @OneToMany(mappedBy = "product")
+    private List<ProductReview> productReviews;
+
+    // 구매상품 테이블 매핑 설정
+    @OneToMany(mappedBy = "product")
+    private List<OrderItem> orderItems;
+
+    // 관심상품 테이블 매핑 설정
+    @OneToMany(mappedBy = "product")
+    private List<WishList> wishLists;
 
 }

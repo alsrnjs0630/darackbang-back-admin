@@ -24,7 +24,7 @@ public class OrderItem {
     private Long id;
 
     //상품 아이디
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
