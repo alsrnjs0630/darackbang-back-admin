@@ -21,8 +21,9 @@ public class MemberRole {
     private Long id;
 
     // 회원 롤 (user, manager, admin)
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 7)
-    private String role;
+    private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
