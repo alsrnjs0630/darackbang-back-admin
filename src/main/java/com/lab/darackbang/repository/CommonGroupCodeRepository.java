@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface CommonGroupCodeRepository extends
-        JpaRepository<CommonGroupCode, Long>,
+        JpaRepository<CommonGroupCode, String>,
         JpaSpecificationExecutor<CommonGroupCode> {
 
 

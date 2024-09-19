@@ -33,6 +33,23 @@ public class CommonCodeRepositoryTest {
         CommonCode commonCode2 = CommonCode.builder().commonGroupCode(commonGroupCode).commonCode("02").commonCodeName("탈퇴").isUsed(true).build();
 
         commonCodeRepository.save(commonCode2);
+
+    }
+
+
+    @Test
+    void insertProductCommonCode(){
+
+        CommonGroupCode pCommonGroupCode = commonGroupCodeRepository.findByCommonGroupCode("PRODUCT_STATE_CODE").orElseThrow();
+
+        CommonCode pCommonCode = CommonCode.builder().commonGroupCode(pCommonGroupCode).commonCode("01").commonCodeName("정상").isUsed(true).build();
+
+        commonCodeRepository.save(pCommonCode);
+
+        CommonCode pCommonCode2 = CommonCode.builder().commonGroupCode(pCommonGroupCode).commonCode("02").commonCodeName("탈퇴").isUsed(true).build();
+
+        commonCodeRepository.save(pCommonCode2);
+
     }
 
     @Test
@@ -56,6 +73,21 @@ public class CommonCodeRepositoryTest {
         CommonCode commonCode = commonCodeRepository.findById(key).orElseThrow();
 
         commonCode.setCommonCodeName("활동");
+
+        commonCodeRepository.save(commonCode);
+
+    }
+
+    @Test
+    void updateProductCommonCode(){
+
+        CommonCodeKey key = new CommonCodeKey();
+        key.setCommonCode("02");
+        key.setCommonGroupCode("PRODUCT_STATE_CODE");
+
+        CommonCode commonCode = commonCodeRepository.findById(key).orElseThrow();
+
+        commonCode.setCommonCodeName("삭제");
 
         commonCodeRepository.save(commonCode);
 

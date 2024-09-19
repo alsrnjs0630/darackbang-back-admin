@@ -22,13 +22,18 @@ public class CommonGroupCodeRepositoryTest {
     private CommonCodeRepository commonCodeRepository;
 
 
-
     @Test
     void insertGroupCode() {
         CommonGroupCode commonGroupCode = CommonGroupCode.builder().commonGroupCode("MEMBER_STATE_CODE").commonGroupCodeName("회원상태코드").build();
         commonGroupCodeRepository.save(commonGroupCode);
     }
 
+
+    @Test
+    void insertGroupCode2() {
+        CommonGroupCode commonGroupCode = CommonGroupCode.builder().commonGroupCode("PRODUCT_STATE_CODE").commonGroupCodeName("상품상태코드").build();
+        commonGroupCodeRepository.save(commonGroupCode);
+    }
 
     @Test
     void findAllCommonGroupCode(){
@@ -40,5 +45,16 @@ public class CommonGroupCodeRepositoryTest {
             log.info("공통코드 리스트{}", commonGroupCode.getCommonCodes().toString());
         });
     }
+
+    @Test
+    void findByCommonGroupCode(){
+
+        CommonGroupCode commonGroupCode = commonGroupCodeRepository.findById("MEMBER_STATE_CODE").orElseThrow();
+
+        log.info("공통그룹코드 리스트:{}",commonGroupCode.toString());
+        log.info("공통코드 리스트:{}", commonGroupCode.getCommonCodes().toString());
+
+    }
+
 
 }
