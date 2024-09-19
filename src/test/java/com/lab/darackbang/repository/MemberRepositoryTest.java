@@ -25,7 +25,6 @@ public class MemberRepositoryTest {
     private MemberRoleRepository memberRoleRepository;
 
     @Test
-    @Transactional
     void insertTest(){
         for(int i=1; i<=10 ;i++ ){
 
@@ -74,7 +73,6 @@ public class MemberRepositoryTest {
     }
 
     @Test
-    @Transactional
     void read(){
 
         Member member = memberRepository.findById(3L).orElseThrow();

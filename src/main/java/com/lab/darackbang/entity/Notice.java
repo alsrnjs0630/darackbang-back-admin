@@ -31,6 +31,11 @@ public class Notice {
     @Column(name = "contents", nullable = false, length = 1000)
     private String contents;
 
+    //삭제유무
+    @Builder.Default
+    @Column(name = "is_delete", nullable = false)
+    private Boolean isDelete = false;
+
     //등록일
     @Column(name = "created_date", nullable = false)
     @CreatedDate

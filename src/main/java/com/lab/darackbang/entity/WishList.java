@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Table(name = "tbl_wishlist")
+@Table(name = "tbl_wish_list")
 public class WishList {
 
     // 관심상품아이디
