@@ -140,6 +140,7 @@ public class Product {
     @CreatedDate
     private LocalDate createdDate;
 
+
     //수정일
     //@LastModifiedDate: 엔티티가 마지막으로 수정될 때의 타임스탬프를 자동으로 기록
     @Column(name = "updated_date", nullable = false)
@@ -147,7 +148,7 @@ public class Product {
     private LocalDate updatedDate;
 
     //productImages 매핑 설정
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductImage> productImages;
 
     //subscribes 매핑 설정
