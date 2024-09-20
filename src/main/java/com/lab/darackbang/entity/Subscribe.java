@@ -2,11 +2,12 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Builder
@@ -15,8 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
-@Table(name = "tbl_subcribe")
+@Table(name = "tbl_subscribe")
 public class Subscribe {
     // 구독 아이디
     @Id
@@ -50,9 +50,9 @@ public class Subscribe {
     @Column(name = "payment_date", nullable = false)
     private LocalDate paymentDate;
 
-    // 배송시작일
+    // 배송일
     @Column(name = "shipping_date", nullable = false)
-    private LocalDate shippingDate;
+    private LocalDate shippingDate;//2024.10.29
 
     // 구독 상태 ( default 01 : 구독, 02 : 해지신청, 03: 구독해지, 04: 구독중지)
     @Builder.Default
@@ -73,15 +73,19 @@ public class Subscribe {
     @LastModifiedDate
     private LocalDate updatedDate;
 
-    // payment (결제) 테이블 매핑 설정
-    @OneToMany(mappedBy = "subscribe")
-    private List<Payment> payments;
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        Subscribe subscribe = (Subscribe) o;
+        return getId() != null && Objects.equals(getId(), subscribe.getId());
+    }
 
-    // delivery (배송) 테이블 매핑 설정
-    @OneToMany(mappedBy = "subscribe")
-    private List<Delivery> deliveries;
-
-    // exchagne (교환) 테이블 매핑 설정
-    @OneToMany(mappedBy = "subscribe")
-    private List<Exchange> exchanges;
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
 }

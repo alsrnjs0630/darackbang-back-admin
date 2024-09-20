@@ -38,7 +38,6 @@ public class CommonCode {
     @JsonIgnoreProperties(value = {"commonCodes"}, allowSetters = true)
     private CommonGroupCode commonGroupCode;
 
-
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

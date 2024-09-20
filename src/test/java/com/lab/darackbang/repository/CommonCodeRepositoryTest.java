@@ -24,7 +24,7 @@ public class CommonCodeRepositoryTest {
     @Test
     void insertCommonCode(){
 
-        CommonGroupCode commonGroupCode = commonGroupCodeRepository.findByCommonGroupCode("MEMBER_STATE_CODE").orElseThrow();
+        CommonGroupCode commonGroupCode = commonGroupCodeRepository.findById("MEMBER_STATE_CODE").orElseThrow();
 
         CommonCode commonCode = CommonCode.builder().commonGroupCode(commonGroupCode).commonCode("01").commonCodeName("정상").isUsed(true).build();
 

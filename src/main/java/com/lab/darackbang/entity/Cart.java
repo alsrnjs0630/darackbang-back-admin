@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -15,9 +16,9 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Table(name = "tbl_cart")
 public class Cart {
+
     // 장바구니아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,18 +30,9 @@ public class Cart {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    // 상품아이디
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    // 구매수량
-    @Column(name = "product_quantity", nullable = false, length = 7)
-    private Integer productQuantity;
-
-    // 상품금액
-    @Column(name = "product_total_price", nullable = false, length = 7)
-    private Integer productTotalPrice;
+    //장바구니 아이템
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> cartItems;
 
     // 등록일
     @Column(name = "created_date", nullable = false)
@@ -66,5 +58,14 @@ public class Cart {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "member = " + member + ", " +
+                "createdDate = " + createdDate + ", " +
+                "updatedDate = " + updatedDate + ")";
     }
 }

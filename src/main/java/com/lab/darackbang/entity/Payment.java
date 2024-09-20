@@ -2,10 +2,13 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Builder
@@ -13,8 +16,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode
 @Table(name = "tbl_payment")
 public class Payment {
 
@@ -23,11 +24,6 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
-    // 구독아이디
-    @ManyToOne
-    @JoinColumn(name = "subscribe_id", nullable = false)
-    private Subscribe subscribe;
 
     // 결제번호
     @Column(name = "payment_id", nullable = false, length = 50)
@@ -59,4 +55,33 @@ public class Payment {
     @Column(name = "updated_date", nullable = false)
     @LastModifiedDate
     private LocalDate updatedDate;
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "paymentId = " + paymentId + ", " +
+                "paymentPrice = " + paymentPrice + ", " +
+                "paymentState = " + paymentState + ", " +
+                "paymentDate = " + paymentDate + ", " +
+                "failReason = " + failReason + ", " +
+                "createdDate = " + createdDate + ", " +
+                "updatedDate = " + updatedDate + ")";
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        Payment payment = (Payment) o;
+        return getId() != null && Objects.equals(getId(), payment.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
 }

@@ -44,7 +44,7 @@ public class CommonCodeDTO implements Serializable {
      */
     @NotNull
     @Schema(description = "사용유무", required = true)
-    private Boolean isUsed;
+    private String isUsed;
 
     private CommonGroupCodeDTO commonGroupCode;
 }

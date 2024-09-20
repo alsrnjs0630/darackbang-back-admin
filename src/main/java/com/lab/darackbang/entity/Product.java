@@ -1,5 +1,6 @@
 package com.lab.darackbang.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -140,7 +141,6 @@ public class Product {
     @CreatedDate
     private LocalDate createdDate;
 
-
     //수정일
     //@LastModifiedDate: 엔티티가 마지막으로 수정될 때의 타임스탬프를 자동으로 기록
     @Column(name = "updated_date", nullable = false)
@@ -151,28 +151,34 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductImage> productImages;
 
-    //subscribes 매핑 설정
-    @OneToMany(mappedBy = "product")
-    private List<Subscribe> subscribes;
-
-    // 장바구니 테이블 (cart) 매핑 설정
-    @OneToMany(mappedBy = "product")
-    private List<Cart> carts;
-
     // QandA 테이블 (qanda) 매핑 설정
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Transient
     private List<Qanda> qandas;
 
     // 구매후기 테이블 매핑 설정
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Transient
     private List<ProductReview> productReviews;
 
+    // 관심상품 테이블 매핑 설정
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Transient
+    private List<Subscribe> subscribes;
+
     // 구매상품 테이블 매핑 설정
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Transient
     private List<OrderItem> orderItems;
 
     // 관심상품 테이블 매핑 설정
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Transient
     private List<WishList> wishLists;
 
 }
