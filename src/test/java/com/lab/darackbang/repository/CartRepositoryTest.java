@@ -1,6 +1,7 @@
 package com.lab.darackbang.repository;
 
 import com.lab.darackbang.entity.Cart;
+import com.lab.darackbang.entity.CartItem;
 import com.lab.darackbang.entity.Member;
 import com.lab.darackbang.entity.Product;
 import org.junit.jupiter.api.Test;
@@ -25,21 +26,29 @@ public class CartRepositoryTest {
 
     @Test
     void cartInsertTest() {
-        Member member = memberRepository.findById(15L).orElseThrow();
-        List<Cart> cartList = new ArrayList<>();
+        Member member = memberRepository.findById(5L).orElseThrow();
+        Cart cart = Cart.builder().member(member)
+                .createdDate(LocalDate.now())
+                .updatedDate(LocalDate.now())
+                .build();
 
-        for(int i=22; i<=26; i++) {
+        List<CartItem> cartItemList = new ArrayList<>();
+
+        for(int i=3; i<=7; i++) {
             Product product = productRepository.findById(Long.parseLong(String.valueOf(i))).orElseThrow();
-            Cart cart = Cart.builder().member(member).product(product)
-                    .productQuantity(2)
-                    .productTotalPrice(product.getSalePrice()*2)
-                    .createdDate(LocalDate.now())
-                    .updatedDate(LocalDate.now())
-                    .build();
-            cartList.add(cart);
+            CartItem cartItem = CartItem.builder()
+                            .cart(cart)
+                            .product(product)
+                            .quantity(3)
+                            .productPrice(product.getSalePrice())
+                            .build();
+
+            cartItemList.add(cartItem);
         }
 
-        cartRepository.saveAll(cartList);
+        cart.setCartItems(cartItemList);
+
+        cartRepository.save(cart);
     }
 
 }

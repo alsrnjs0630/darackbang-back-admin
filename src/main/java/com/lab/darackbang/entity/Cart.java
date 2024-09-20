@@ -31,7 +31,7 @@ public class Cart {
     private Member member;
 
     //장바구니 아이템
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CartItem> cartItems;
 
     // 등록일
