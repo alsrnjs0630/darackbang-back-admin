@@ -28,8 +28,6 @@ public class CartRepositoryTest {
     void cartInsertTest() {
         Member member = memberRepository.findById(5L).orElseThrow();
         Cart cart = Cart.builder().member(member)
-                .createdDate(LocalDate.now())
-                .updatedDate(LocalDate.now())
                 .build();
 
         List<CartItem> cartItemList = new ArrayList<>();

@@ -2,12 +2,14 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Builder
@@ -16,9 +18,10 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Table(name = "tbl_qanda")
-public class Qanda {
+public class Qanda extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     // QandA 아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,18 +51,9 @@ public class Qanda {
     @Column(name = "is_deleted", nullable = false, length = 1)
     private Boolean isDeleted = false;
 
-    // 등록일
-    @Column(name = "created_date", nullable = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    // 수정일
-    @Column(name = "updated_date", nullable = false)
-    @LastModifiedDate
-    private LocalDate updatedDate;
-
     // QandA 이미지 (qanda_image)테이블 매핑 설정
     @OneToMany(mappedBy = "qanda")
+    @ToString.Exclude
     private List<QandaImage> qandaImages;
 
     // QandA 답글 테이블 매핑 설정

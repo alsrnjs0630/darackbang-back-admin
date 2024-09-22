@@ -25,8 +25,6 @@ public class EventRepositoryTest {
                     .eventState("02")
                     .startDate(LocalDate.of(2024,9,16))
                     .endDate(LocalDate.of(2024,9,20))
-                    .createdDate(LocalDate.now())
-                    .updatedDate(LocalDate.now())
                     .build();
 
             eventRepository.save(event);
@@ -48,7 +46,6 @@ public class EventRepositoryTest {
 
         event.setTitle("추석 이벤트 6 [종료]");
         event.setContents("본 이벤트는 종료되었습니다.");
-        event.setUpdatedDate(LocalDate.now());
         event.setEventState("01");
         eventRepository.save(event);
     }

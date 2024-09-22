@@ -5,18 +5,20 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "tbl_age_month_stat")
-public class AgeMonthStat {
+public class AgeMonthStat extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     // 월별아이디
     @Id
@@ -39,14 +41,4 @@ public class AgeMonthStat {
     // 판매액
     @Column(name = "sale_total_price", nullable = false)
     private Integer saleTotalPrice;
-
-    //등록일
-    @Column(name = "created_date", nullable = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    //수정일
-    @Column(name = "updated_date", nullable = false)
-    @LastModifiedDate
-    private LocalDate updatedDate;
 }

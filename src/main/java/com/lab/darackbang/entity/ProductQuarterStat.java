@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
@@ -14,9 +15,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Table(name = "tbl_prd_quarter_stat")
-public class ProductQuarterStat {
+public class ProductQuarterStat extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     // 분기별아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,13 +41,4 @@ public class ProductQuarterStat {
     @Column(name = "sale_total_price", nullable = false)
     private Integer saleTotalPrice;
 
-    //등록일
-    @Column(name = "created_date", nullable = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    //수정일
-    @Column(name = "updated_date", nullable = false)
-    @LastModifiedDate
-    private LocalDate updatedDate;
 }

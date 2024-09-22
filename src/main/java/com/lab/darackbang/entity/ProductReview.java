@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,9 +16,10 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Table(name = "tbl_product_review")
-public class ProductReview {
+public class ProductReview   extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     // 구매후기아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,17 +49,8 @@ public class ProductReview {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
-    // 등록일
-    @Column(name = "created_date", nullable = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    // 수정일
-    @Column(name = "updated_date", nullable = false)
-    @LastModifiedDate
-    private LocalDate updatedDate;
-
     // 구매후기 이미지 매핑 설정
     @OneToMany(mappedBy = "productReview")
+    @ToString.Exclude
     private List<ProductReviewImage> productReviewImages;
 }

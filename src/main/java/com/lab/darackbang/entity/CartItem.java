@@ -3,6 +3,7 @@ package com.lab.darackbang.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
@@ -13,7 +14,9 @@ import java.math.BigDecimal;
 @Setter
 @ToString
 @Table(name = "tbl_cart_item")
-public class CartItem {
+public class CartItem extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +30,7 @@ public class CartItem {
     //상품 아이디
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
+    @ToString.Exclude
     private Product product;
 
     //상품 수량
@@ -34,7 +38,7 @@ public class CartItem {
     private Integer quantity;
 
     //상품 가격
-    @Column(name = "product_price",nullable = false)
+    @Column(name = "product_price", nullable = false)
     private Integer productPrice;
 
 }

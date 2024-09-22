@@ -3,6 +3,7 @@ package com.lab.darackbang.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -12,9 +13,10 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Table(name = "tbl_main_category")
-public class MainCategory {
+public class MainCategory extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     // 대분류카테고리코드 code T01(잎차), T02(티백), T03(열매)
     @Id
@@ -27,6 +29,6 @@ public class MainCategory {
 
     // subCategory 중분류카테고리 테이블 매핑 설정
     @OneToMany(mappedBy = "mainCategory")
+    @ToString.Exclude
     private List<SubCategory> subCategories;
-
 }

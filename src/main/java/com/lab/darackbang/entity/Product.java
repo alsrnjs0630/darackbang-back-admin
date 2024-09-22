@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,9 +17,10 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode      //equals, hashcode 메서드 생성(데이터 타입에 맞는지 검사)
 @Table(name = "tbl_product")
-public class Product {
+public class Product extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     //상품아이디
     //@Id: 기본키
     //@GeneratedValue: 시퀀스 생성
@@ -135,50 +137,44 @@ public class Product {
     @Builder.Default
     private Integer wishCount = Integer.valueOf(0);
 
-    //등록일
-    //@CreatedDate: 엔티티가 처음 생성될 때의 타임스탬프를 자동으로 기록
-    @Column(name = "created_date", nullable = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    //수정일
-    //@LastModifiedDate: 엔티티가 마지막으로 수정될 때의 타임스탬프를 자동으로 기록
-    @Column(name = "updated_date", nullable = false)
-    @LastModifiedDate
-    private LocalDate updatedDate;
-
     //productImages 매핑 설정
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<ProductImage> productImages;
 
     // QandA 테이블 (qanda) 매핑 설정
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     @Transient
+    @ToString.Exclude
     private List<Qanda> qandas;
 
     // 구매후기 테이블 매핑 설정
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     @Transient
+    @ToString.Exclude
     private List<ProductReview> productReviews;
 
     // 관심상품 테이블 매핑 설정
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     @Transient
+    @ToString.Exclude
     private List<Subscribe> subscribes;
 
     // 구매상품 테이블 매핑 설정
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     @Transient
+    @ToString.Exclude
     private List<OrderItem> orderItems;
 
     // 관심상품 테이블 매핑 설정
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     @Transient
+    @ToString.Exclude
     private List<WishList> wishLists;
 
 }

@@ -3,13 +3,9 @@ package com.lab.darackbang.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDate;
+import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Builder
@@ -18,7 +14,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @Table(name = "tbl_member")
-public class Member {
+public class Member extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     // 회원 아이디, 시퀀스 생성
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +28,7 @@ public class Member {
     private String userEmail;
 
     // 패스워드 ( not null, 크기 16, 특수문자 1개 이상 + 숫자 1개 이상 + 대소문자 구분 영문자 8자 이상 ~ 16자 이하 )
-    @Column(name = "password", nullable = false, length = 16)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
 
     // 회원 이름 (not null, 크기 15)
@@ -49,7 +47,7 @@ public class Member {
     @Column(name = "gender", nullable = false, length = 1)
     private String gender;
 
-    // 휴대폰 번호 ( not null, 크기 11 "-"제외한 11자리)
+    //휴대폰  번호 ( not null, 크기 11 "-"제외한 11자리)
     @Column(name = "mobile_no", nullable = false, length = 11)
     private String mobileNo;
 
@@ -100,22 +98,12 @@ public class Member {
     @Column(name = "member_state", nullable = false, length = 2)
     private String memberState = "01";
 
-    // 등록일
-    @Column(name = "created_date", nullable = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    // 수정일
-    @Column(name = "updated_date", nullable = false)
-    @LastModifiedDate
-    private LocalDate updatedDate;
-
     // memberRole 테이블 (회원롤) 매핑 설정
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MemberRole> memberRoles;
 
     // memberCard 테이블 (회원카드정보) 매핑 설정
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private MemberCard memberCard;
 
     // subscribe 테이블 (구독) 매핑 설정
@@ -146,45 +134,34 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<ProductReview> productReviews;
 
+    //결제 테이블 매핑 설정
+    @OneToMany(mappedBy = "member")
+    private List<Payment> payments;
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "userEmail = " + userEmail + ", " +
-                "password = " + password + ", " +
-                "name = " + name + ", " +
-                "birthday = " + birthday + ", " +
-                "ageGroup = " + ageGroup + ", " +
-                "gender = " + gender + ", " +
-                "mobileNo = " + mobileNo + ", " +
-                "phoneNo = " + phoneNo + ", " +
-                "address = " + address + ", " +
-                "postNo = " + postNo + ", " +
-                "shippingAddr = " + shippingAddr + ", " +
-                "shipPostNo = " + shipPostNo + ", " +
-                "addShippingAddr = " + addShippingAddr + ", " +
-                "addPostNo = " + addPostNo + ", " +
-                "mileage = " + mileage + ", " +
-                "isDeleted = " + isDeleted + ", " +
-                "isBlacklist = " + isBlacklist + ", " +
-                "memberState = " + memberState + ", " +
-                "createdDate = " + createdDate + ", " +
-                "updatedDate = " + updatedDate + ")";
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        Member member = (Member) o;
-        return getId() != null && Objects.equals(getId(), member.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+                "id = " + getId() + ", " +
+                "userEmail = " + getUserEmail() + ", " +
+                "password = " + getPassword() + ", " +
+                "name = " + getName() + ", " +
+                "birthday = " + getBirthday() + ", " +
+                "ageGroup = " + getAgeGroup() + ", " +
+                "gender = " + getGender() + ", " +
+                "mobileNo = " + getMobileNo() + ", " +
+                "phoneNo = " + getPhoneNo() + ", " +
+                "address = " + getAddress() + ", " +
+                "postNo = " + getPostNo() + ", " +
+                "shippingAddr = " + getShippingAddr() + ", " +
+                "shipPostNo = " + getShipPostNo() + ", " +
+                "addShippingAddr = " + getAddShippingAddr() + ", " +
+                "addPostNo = " + getAddPostNo() + ", " +
+                "mileage = " + getMileage() + ", " +
+                "isDeleted = " + getIsDeleted() + ", " +
+                "isBlacklist = " + getIsBlacklist() + ", " +
+                "memberState = " + getMemberState() + ", " +
+                "memberCard = " + getMemberCard() + ", " +
+                "createdDate = " + getCreatedDate() + ", " +
+                "updatedDate = " + getUpdatedDate() + ")";
     }
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
@@ -16,7 +17,9 @@ import java.util.Objects;
 @ToString
 @Table(name = "tbl_common_code")
 @IdClass(CommonCodeKey.class)
-public class CommonCode {
+public class CommonCode implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     // 코드 -> 공통코드명세서 참고
     @Id
     @Column(name = "common_code", nullable = false, length = 20)
@@ -38,19 +41,4 @@ public class CommonCode {
     @JsonIgnoreProperties(value = {"commonCodes"}, allowSetters = true)
     private CommonGroupCode commonGroupCode;
 
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        CommonCode that = (CommonCode) o;
-        return getCommonCode() != null && Objects.equals(getCommonCode(), that.getCommonCode());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
 }

@@ -1,4 +1,4 @@
-package com.lab.darackbang.dto;
+package com.lab.darackbang.dto.common;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -20,12 +20,14 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 public class CommonGroupCodeDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     /**
      * 공통그룹코드
      */
     @NotNull
     @Size(max = 30)
-    @Schema(description = "공통그룹코드", required = true)
+    @Schema(description = "공통그룹코드", requiredMode = Schema.RequiredMode.REQUIRED)
     private String commonGroupCode;
 
     /**
@@ -33,11 +35,11 @@ public class CommonGroupCodeDTO implements Serializable {
      */
     @NotNull
     @Size(max = 50)
-    @Schema(description = "공통그룹코드명", required = true)
+    @Schema(description = "공통그룹코드명", requiredMode = Schema.RequiredMode.REQUIRED)
     private String commonGroupCodeName;
 
 
-    @Schema(description = "공통코드리스트", required = false)
+    @Schema(description = "공통코드리스트", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private List<CommonCodeDTO> commonCodes;
 
 }
