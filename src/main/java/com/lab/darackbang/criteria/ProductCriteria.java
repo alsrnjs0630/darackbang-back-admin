@@ -25,6 +25,11 @@ public class ProductCriteria {
                 spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("salePrice"), dto.getSalePrice()));
             }
 
+            //검색 필터 조건이 있으면 아래 추가함.
+
+            //삭제 처리된 상품은 조회 대상에서 제외
+            spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("isDeleted"),false));
+
             return spec.toPredicate(root, query, criteriaBuilder);
         };
     }

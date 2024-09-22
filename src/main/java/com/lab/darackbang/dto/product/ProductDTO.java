@@ -212,7 +212,7 @@ public class ProductDTO implements Serializable {
      * 상품 이미지 리스트
      */
     @Schema(description = "상품 이미지 리스트")
-    private List<ProductImageDTO> images;
+    private List<ProductImageDTO> productImages;
 
     /**
      * 생성일자
