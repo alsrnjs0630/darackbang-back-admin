@@ -27,5 +27,4 @@ public interface CommonCodeMapper {
     default void afterMapping(@MappingTarget CommonCode commonCode, CommonCodeDTO commonCodeDTO) {
         commonCode.setIsUsed(!commonCodeDTO.getIsUsed().equals("비사용"));
     }
-
 }
