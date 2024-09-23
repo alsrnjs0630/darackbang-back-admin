@@ -130,8 +130,6 @@ public class CartItemRepositoryTest {
 
     }
 
-
-
     private void insertStatics(List<CartItem> cartItemList) {
 
         //현재 날짜 가져오기
@@ -154,7 +152,9 @@ public class CartItemRepositoryTest {
             //상품명
             String productName = cartItem1.getProduct().getProductName();
 
-            // 연령별 년, 분기, 월 통계 데이터 조회
+            //ifPresentOrElse 를 사용 하여 데이터가 있으면 업데이트 없으면 생성 하는 코드로 변경함.
+
+            // 연령별 월 통계 데이터 조회
             ageMonthStatRepository.findByMonthAndYearAndAgeGroup(month, year, ageGroup)
                     .ifPresentOrElse(
                             // 통계 데이터가 존재하면 업데이트
@@ -176,9 +176,17 @@ public class CartItemRepositoryTest {
                             }
                     );
 
-            // 연령별 년, 분기 통계 처리 추가 가능
+            // 연령별 년, 통계 데이터 조회 추가
 
-            // 월, 분기, 년 상품 통계 데이터 업데이트 처리 가능
+            // 연령별  분기 통계 데이터 조회 추가
+
+
+            // 상품별 년 통계 데이터 조회 쿠가
+
+            // 상품별 분기 통계 데이터 조회 추가
+
+            // 상품별 월 통계 데이터 조회 추가
+
         }));
 
     }
