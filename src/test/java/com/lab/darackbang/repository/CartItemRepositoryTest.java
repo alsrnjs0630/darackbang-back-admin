@@ -144,46 +144,42 @@ public class CartItemRepositoryTest {
         String month = String.valueOf(currentDate.getMonthValue());
 
         //분기
-        String quarter = String.valueOf((Integer.parseInt(month) - 1) / 3 + 1);
+        String quarter = String.valueOf(Math.ceil(currentDate.getMonthValue() / 3.0)) ;
 
+        cartItemList.stream().findFirst().ifPresent(cartItem -> cartItemList.forEach(cartItem1 -> {
 
-        CartItem cartItem = cartItemList.stream().findFirst().get();
+            //연령대
+            String ageGroup = cartItem1.getCart().getMember().getAgeGroup();
 
-        if (cartItem != null) {
+            //상품명
+            String productName = cartItem1.getProduct().getProductName();
 
+            // 연령별 년, 분기, 월 통계 데이터 조회
+            ageMonthStatRepository.findByMonthAndYearAndAgeGroup(month, year, ageGroup)
+                    .ifPresentOrElse(
+                            // 통계 데이터가 존재하면 업데이트
+                            ageMonthStat -> {
+                                int updatedSaleTotalPrice = ageMonthStat.getSaleTotalPrice() +
+                                        (cartItem1.getProductPrice() * cartItem1.getQuantity());
+                                ageMonthStat.setSaleTotalPrice(updatedSaleTotalPrice);
+                                ageMonthStatRepository.save(ageMonthStat);
+                            },
+                            // 통계 데이터가 존재하지 않으면 새로 생성
+                            () -> {
+                                AgeMonthStat newAgeMonthStat = AgeMonthStat.builder()
+                                        .month(month)
+                                        .year(year)
+                                        .ageGroup(ageGroup)
+                                        .saleTotalPrice(cartItem1.getProductPrice() * cartItem1.getQuantity())
+                                        .build();
+                                ageMonthStatRepository.save(newAgeMonthStat);
+                            }
+                    );
 
-            cartItemList.forEach(cartItem1 -> {
+            // 연령별 년, 분기 통계 처리 추가 가능
 
-                //연령별 년, 분기, 월 통계 데이터 생성 혹은 업데잍,
-                Optional<AgeMonthStat> findAgeMonthStat = ageMonthStatRepository.findByMonthAndYearAndAgeGroup(month, year, cartItem1.getCart().getMember().getAgeGroup());
-
-                //연령별 월 업데이트
-                if (findAgeMonthStat != null) {
-
-                    Integer totalPrice = cartItemList.stream().mapToInt(carts -> carts.getProductPrice() * carts.getQuantity()).sum();
-                    findAgeMonthStat.get().setSaleTotalPrice(findAgeMonthStat.get().getSaleTotalPrice() + (cartItem1.getProductPrice()*cartItem1.getQuantity()));
-                    ageMonthStatRepository.save(findAgeMonthStat.get());
-
-                    //연령별 월 생성
-                } else {
-                    AgeMonthStat ageMonthStat = AgeMonthStat.builder().month(month).year(year).ageGroup(cartItem.getCart().getMember().getAgeGroup()).build();
-
-                    ageMonthStatRepository.save(ageMonthStat);
-                }
-
-                //연령별 년
-
-                //연령별 분기
-
-
-                //월, 분기, 년 상품 통계 데이터 생성 혹은 업데이트
-
-               // cartItem1.getProduct().getProductName()
-
-            });
-
-        }
-
+            // 월, 분기, 년 상품 통계 데이터 업데이트 처리 가능
+        }));
 
     }
 }
