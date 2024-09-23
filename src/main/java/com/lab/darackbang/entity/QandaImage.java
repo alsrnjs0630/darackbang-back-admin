@@ -3,6 +3,8 @@ package com.lab.darackbang.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Entity
 @Builder
 @AllArgsConstructor
@@ -10,9 +12,10 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Table(name = "tbl_qanda_image")
-public class QandaImage {
+public class QandaImage implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     // 이미지아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

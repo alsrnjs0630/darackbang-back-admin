@@ -2,10 +2,13 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Builder
@@ -14,9 +17,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Table(name = "tbl_age_quarter_stat")
-public class AgeQuarterStat {
+public class AgeQuarterStat extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     // 분기별아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,13 +43,4 @@ public class AgeQuarterStat {
     @Column(name = "sale_total_price", nullable = false)
     private Integer saleTotalPrice;
 
-    //등록일
-    @Column(name = "created_date", nullable = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    //수정일
-    @Column(name = "updated_date", nullable = false)
-    @LastModifiedDate
-    private LocalDate updatedDate;
 }

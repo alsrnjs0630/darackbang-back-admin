@@ -20,8 +20,6 @@ public class NoticeRepositoryTest {
         for (int i = 0; i < 15; i++) {
             Notice notice = Notice.builder().title("공지사항 테스트" + i)
                     .contents(i + "번째 공지사항 등록")
-                    .createdDate(LocalDate.now())
-                    .updatedDate(LocalDate.now())
                     .build();
 
             noticeRepository.save(notice);
@@ -46,7 +44,6 @@ public class NoticeRepositoryTest {
 
         notice.setTitle("추석연휴 배송안내");
         notice.setContents("추석연휴에는 배송되지않습니다.");
-        notice.setCreatedDate(LocalDate.of(2024,9,9));
 
         noticeRepository.save(notice);
     }

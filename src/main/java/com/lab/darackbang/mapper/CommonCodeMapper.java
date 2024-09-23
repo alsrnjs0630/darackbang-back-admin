@@ -1,7 +1,7 @@
 package com.lab.darackbang.mapper;
 
 
-import com.lab.darackbang.dto.CommonCodeDTO;
+import com.lab.darackbang.dto.common.CommonCodeDTO;
 import com.lab.darackbang.entity.CommonCode;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -27,5 +27,4 @@ public interface CommonCodeMapper {
     default void afterMapping(@MappingTarget CommonCode commonCode, CommonCodeDTO commonCodeDTO) {
         commonCode.setIsUsed(!commonCodeDTO.getIsUsed().equals("비사용"));
     }
-
 }

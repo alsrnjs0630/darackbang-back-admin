@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,9 +16,10 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Table(name = "tbl_order_history")
-public class OrderHistory {
+public class OrderHistory extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     //구매내역아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,17 +35,8 @@ public class OrderHistory {
     @Column(name = "order_date", nullable = false)
     private LocalDate orderDate;
 
-    //등록일
-    @Column(name = "created_date", nullable = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    //수정일
-    @Column(name = "updated_date", nullable = false)
-    @LastModifiedDate
-    private LocalDate updatedDate;
-
     //orderItems 매핑 설정
     @OneToMany(mappedBy = "orderHistory", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<OrderItem> orderItems;
 }

@@ -1,7 +1,7 @@
 package com.lab.darackbang.mapper;
 
 
-import com.lab.darackbang.dto.CommonGroupCodeDTO;
+import com.lab.darackbang.dto.common.CommonGroupCodeDTO;
 import com.lab.darackbang.entity.CommonGroupCode;
 import org.mapstruct.Mapper;
 

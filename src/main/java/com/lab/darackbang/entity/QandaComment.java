@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
@@ -14,9 +15,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Table(name = "tbl_qanda_comment")
-public class QandaComment {
+public class QandaComment extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     // QandA 답글 아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,13 +34,4 @@ public class QandaComment {
     @Column(name = "contents", nullable = false, length = 1000)
     private String contents;
 
-    // 등록일
-    @Column(name = "created_date", nullable = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    // 수정일
-    @Column(name = "updated_date", nullable = false)
-    @LastModifiedDate
-    private LocalDate updatedDate;
 }

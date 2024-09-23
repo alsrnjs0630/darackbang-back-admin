@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -24,21 +25,22 @@ public class MemberRepositoryTest {
     @Autowired
     private MemberRoleRepository memberRoleRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Test
     void insertTest(){
         for(int i=1; i<=10 ;i++ ){
 
             Member member = Member.builder() // 필수 기입 사항 설정
                     .userEmail("user"+String.valueOf(i)+"@test.com")
-                    .password("1234")
+                    .password(passwordEncoder.encode("1234"))
                     .name("user"+String.valueOf(i))
                     .birthday("20240302")
                     .ageGroup("20")
                     .gender("F")
                     .mobileNo("01028810137")
                     .mileage(0)
-                    .createdDate(LocalDate.now())
-                    .updatedDate(LocalDate.now())
                     .build();
 
             List<MemberRole> memberRoles = new ArrayList<>();
@@ -75,7 +77,7 @@ public class MemberRepositoryTest {
     @Test
     void read(){
 
-        Member member = memberRepository.findById(3L).orElseThrow();
+        Member member = memberRepository.findById(23L).orElseThrow();
 
         log.info("사용자 이메일 {}",member.toString());
 

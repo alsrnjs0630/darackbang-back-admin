@@ -3,6 +3,7 @@ package com.lab.darackbang.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
@@ -12,9 +13,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Table(name = "tbl_member_card")
-public class MemberCard {
+public class MemberCard extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     // 회원카드정보 아이디
     @Id
@@ -48,11 +50,4 @@ public class MemberCard {
     @Column(name = "valid_state", nullable = false)
     private Boolean validState = false;
 
-    // 등록일
-    @Column(name = "created_date", nullable = false)
-    private LocalDate createdDate;
-
-    // 수정일
-    @Column(name = "updated_date", nullable = false)
-    private LocalDate updatedDate;
 }

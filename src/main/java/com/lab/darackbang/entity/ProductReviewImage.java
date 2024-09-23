@@ -3,6 +3,8 @@ package com.lab.darackbang.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Entity
 @Builder
 @AllArgsConstructor
@@ -10,9 +12,10 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Table(name = "tbl_product_review_image")
-public class ProductReviewImage {
+public class ProductReviewImage implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     // 이미지 아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -55,8 +55,6 @@ public class ProductRepositoryTest {
                     .quantity(24)
                     .expirationDate(LocalDate.of(2025,9,19))
                     .manufactureDate(LocalDate.of(2024,9,1))
-                    .createdDate(LocalDate.now())
-                    .updatedDate(LocalDate.now())
                     .isGmo(false)
                     .wishCount(0)
                     .build();
@@ -100,7 +98,7 @@ public class ProductRepositoryTest {
 
     @Test
     void productDeleteTest() {
-        Product product = productRepository.findById(25L).orElseThrow();
+        Product product = productRepository.findById(1L).orElseThrow();
         product.setIsDeleted(true);
 
         productRepository.save(product);

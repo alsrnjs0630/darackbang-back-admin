@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
@@ -14,9 +15,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Table(name = "tbl_order_item")
-public class OrderItem {
+public class OrderItem extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     //구매아이템아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,13 +43,4 @@ public class OrderItem {
     @Column(name = "order_quantity", nullable = false, length = 7)
     private Integer orderQuantity;
 
-    //등록일
-    @Column(name = "created_date", nullable = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    //수정일
-    @Column(name = "updated_date", nullable = false)
-    @LastModifiedDate
-    private LocalDate updatedDate;
 }

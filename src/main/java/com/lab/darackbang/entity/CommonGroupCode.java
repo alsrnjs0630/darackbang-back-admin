@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,8 +14,11 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Table(name = "tbl_common_group_code")
-public class CommonGroupCode {
+public class CommonGroupCode implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     // 그룹코드 -> 공통코드명세서 참고
     @Id
@@ -29,26 +33,4 @@ public class CommonGroupCode {
     @OneToMany(mappedBy = "commonGroupCode", fetch = FetchType.EAGER)
     private List<CommonCode> commonCodes;
 
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "commonGroupCode = " + commonGroupCode + ", " +
-                "commonGroupCodeName = " + commonGroupCodeName + ")";
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        CommonGroupCode that = (CommonGroupCode) o;
-        return getCommonGroupCode() != null && Objects.equals(getCommonGroupCode(), that.getCommonGroupCode());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
 }
