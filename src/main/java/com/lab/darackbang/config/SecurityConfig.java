@@ -3,6 +3,8 @@ package com.lab.darackbang.config;
 import com.lab.darackbang.security.handler.APILoginFailHandler;
 import com.lab.darackbang.security.handler.APILoginSuccessHandler;
 import com.lab.darackbang.security.handler.CustomAccessDeniedHandler;
+import com.lab.darackbang.security.handler.CustomLogoutSuccessHandler;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
 import lombok.RequiredArgsConstructor;
@@ -55,14 +57,19 @@ public class SecurityConfig {
                         .failureHandler(new APILoginFailHandler()))  // 로그인 실패 시 핸들러
                 // 로그아웃 설정
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/api/member/logout"))  // 로그아웃 URL 설정
-                        .logoutSuccessUrl("/api/home")  // 로그아웃 성공 후 리디렉션할 URL
-                        .invalidateHttpSession(true)  // 세션 무효화
-                        .deleteCookies("JSESSIONID"))  // JSESSIONID 쿠키 삭제
+                        .logoutUrl("/api/member/logout")  // 로그아웃 URL
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/api/member/logout", "POST")) // POST 방식으로 설정
+                        .logoutSuccessUrl("/api/products/list")  // 로그아웃 성공 후 리디렉션
+                        .addLogoutHandler((request, response, authentication) -> {
+                            HttpSession session = request.getSession();
+                            session.invalidate();  // 세션 무효화
+                        })
+                        .logoutSuccessHandler(new CustomLogoutSuccessHandler())
+                        .deleteCookies("JSESSIONID", "access_token"))  // 쿠키 삭제
                 // 인증 요청에 대한 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/member/logout").permitAll()// 로그아웃 요청은 인증 없이 허용
-                        .requestMatchers("/api/products/**").permitAll()// 상품리스트 요청은 인증 없이 허용
+                                .requestMatchers("/api/member/logout").permitAll()// 로그아웃 요청은 인증 없이 허용
+                                .requestMatchers("/api/products/**").permitAll()// 상품리스트 요청은 인증 없이 허용
                         /*.requestMatchers("/api/products/**").hasAnyRole("USER", "MANAGER","ADMIN") // 상품리스틑 요청은 해당롤만 허용 */)
                 // 예외 처리 설정
                 .exceptionHandling(exceptions -> exceptions
