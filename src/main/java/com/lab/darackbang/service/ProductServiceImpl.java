@@ -22,6 +22,13 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductMapper productMapper;
 
+    /**
+     * 주어진 검색 조건 및 페이징 정보를 기반으로 모든 제품 목록을 조회합니다.
+     *
+     * @param searchDTO 제품 검색 조건을 담고 있는 DTO
+     * @param pageable 페이징 처리를 위한 Pageable 객체
+     * @return 검색 조건에 맞는 제품 목록을 페이지 단위로 반환
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAll(ProductSearchDTO searchDTO, Pageable pageable) {

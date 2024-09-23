@@ -98,7 +98,7 @@ public class ProductRepositoryTest {
 
     @Test
     void productDeleteTest() {
-        Product product = productRepository.findById(25L).orElseThrow();
+        Product product = productRepository.findById(1L).orElseThrow();
         product.setIsDeleted(true);
 
         productRepository.save(product);
