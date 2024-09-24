@@ -2,11 +2,8 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Entity
 @Builder
@@ -31,7 +28,7 @@ public class OrderItem extends AbstractAuditingEntity implements Serializable {
     private Product product;
 
     //구매내역아이디
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_history_id", nullable = false)
     private OrderHistory orderHistory;
 

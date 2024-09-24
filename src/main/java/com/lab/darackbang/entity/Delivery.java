@@ -2,11 +2,9 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Entity
 @Builder
@@ -48,8 +46,8 @@ public class Delivery extends AbstractAuditingEntity implements Serializable {
     private String dlyPostNo;
 
     // 배송상태 (default 01 : 배송대기, 02 : 집하, 03 : 배송출발, 04 : 배송중, 05 : 배송완료)
-    @Builder.Default
+    @ColumnDefault("'01'")
     @Column(name = "delivery_state", nullable = false, length = 2)
-    private String deliveryState = "01";
+    private String deliveryState;
 
 }

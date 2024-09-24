@@ -2,9 +2,9 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Entity
 @Builder
@@ -46,8 +46,8 @@ public class MemberCard extends AbstractAuditingEntity implements Serializable {
     private String validDate;
 
     // 카드 유효성상태 (default 0 : 등록, 1 : 삭제)
-    @Builder.Default
+    @ColumnDefault("0")
     @Column(name = "valid_state", nullable = false)
-    private Boolean validState = false;
+    private Boolean validState;
 
 }

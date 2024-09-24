@@ -2,14 +2,10 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Builder
@@ -47,9 +43,9 @@ public class Qanda extends AbstractAuditingEntity implements Serializable {
     private String contents;
 
     // 삭제 유무 (default 0 : 등록, 1: 삭제)
-    @Builder.Default
+    @ColumnDefault("0")
     @Column(name = "is_deleted", nullable = false, length = 1)
-    private Boolean isDeleted = false;
+    private Boolean isDeleted;
 
     // QandA 이미지 (qanda_image)테이블 매핑 설정
     @OneToMany(mappedBy = "qanda")

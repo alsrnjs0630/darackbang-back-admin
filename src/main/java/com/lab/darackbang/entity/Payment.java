@@ -2,14 +2,10 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Builder
@@ -44,9 +40,9 @@ public class Payment extends AbstractAuditingEntity implements Serializable {
     private Integer paymentPrice;
 
     // 결제상태 (default 01 : 결제 대기, 02 : 결제 성공, 03 : 결제 실패)
-    @Builder.Default
+    @ColumnDefault("'01'")
     @Column(name = "payment_state", nullable = false, length = 2)
-    private String paymentState = "01";
+    private String paymentState;
 
     // 결제일
     @Column(name = "payment_date", nullable = false)

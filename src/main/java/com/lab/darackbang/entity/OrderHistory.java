@@ -2,8 +2,6 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -36,7 +34,7 @@ public class OrderHistory extends AbstractAuditingEntity implements Serializable
     private LocalDate orderDate;
 
     //orderItems 매핑 설정
-    @OneToMany(mappedBy = "orderHistory")
+    @OneToMany(mappedBy = "orderHistory", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<OrderItem> orderItems;
 }

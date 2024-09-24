@@ -2,8 +2,7 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -39,8 +38,8 @@ public class Event   extends AbstractAuditingEntity implements Serializable {
 
     //이벤트상태
     @Column(name = "event_state", nullable = false, length = 2)
-    @Builder.Default
-    private String eventState = "02";
+    @ColumnDefault("'02'")
+    private String eventState;
 
     //이벤트시작일
     @Column(name = "start_date", nullable = true)

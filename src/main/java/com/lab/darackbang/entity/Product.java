@@ -3,8 +3,7 @@ package com.lab.darackbang.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -62,8 +61,8 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     //노출유무
     //@Builder.Default: 디폴트값 설정
     @Column(name = "is_visible", nullable = false, length = 1)
-    @Builder.Default
-    private Boolean isVisible = Boolean.TRUE;
+    @ColumnDefault("1")
+    private Boolean isVisible;
 
     //제조사
     @Column(name = "manufacture", nullable = false, length = 50)
@@ -95,13 +94,13 @@ public class Product extends AbstractAuditingEntity implements Serializable {
 
     //삭제유무
     @Column(name = "is_deleted", nullable = false, length = 1)
-    @Builder.Default
-    private Boolean isDeleted = false;
+    @ColumnDefault("0")
+    private Boolean isDeleted;
 
     //품절유무
     @Column(name = "is_soldout", nullable = false, length = 1)
-    @Builder.Default
-    private Boolean isSoldout = Boolean.FALSE;
+    @ColumnDefault("0")
+    private Boolean isSoldout;
 
     //영양성분
     @Column(name = "nutrition", nullable = true, length = 1000)
@@ -125,8 +124,8 @@ public class Product extends AbstractAuditingEntity implements Serializable {
 
     //유전자변형유무
     @Column(name = "is_gmo", nullable = false, length = 1)
-    @Builder.Default
-    private Boolean isGmo = Boolean.FALSE;
+    @ColumnDefault("0")
+    private Boolean isGmo;
 
     //용량
     @Column(name = "volume", nullable = true, length = 3)
@@ -134,8 +133,8 @@ public class Product extends AbstractAuditingEntity implements Serializable {
 
     //관심상품카운트
     @Column(name = "wish_count", nullable = false, length = 7)
-    @Builder.Default
-    private Integer wishCount = Integer.valueOf(0);
+    @ColumnDefault("0")
+    private Integer wishCount;
 
     //productImages 매핑 설정
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

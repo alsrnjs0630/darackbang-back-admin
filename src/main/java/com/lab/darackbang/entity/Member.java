@@ -3,6 +3,7 @@ package com.lab.darackbang.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.util.List;
@@ -84,19 +85,19 @@ public class Member extends AbstractAuditingEntity implements Serializable {
     private Integer mileage;
 
     // 삭제 유무 ( default 0 정상유저)
-    @Builder.Default
+    @ColumnDefault("0")
     @Column(name = "is_deleted", nullable = false, length = 1)
-    private Boolean isDeleted = false;
+    private Boolean isDeleted;
 
     // 블랙컨슈머유무 (default 0 정상 : 1 블랙)
-    @Builder.Default
+    @ColumnDefault("0")
     @Column(name = "is_blacklist", nullable = false, length = 1)
-    private Boolean isBlacklist = false;
+    private Boolean isBlacklist;
 
     // 회원상태 (default 01 정상 : 02 탈퇴 : 03 탈퇴신청)
-    @Builder.Default
+    @ColumnDefault("'01'")
     @Column(name = "member_state", nullable = false, length = 2)
-    private String memberState = "01";
+    private String memberState;
 
     // memberRole 테이블 (회원롤) 매핑 설정
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -2,13 +2,10 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Entity
 @Builder
@@ -55,12 +52,12 @@ public class Subscribe extends AbstractAuditingEntity implements Serializable {
 
     // 배송일
     @Column(name = "shipping_date", nullable = false)
-    private LocalDate shippingDate;//2024.10.29
+    private LocalDate shippingDate;//2024.10.29/
 
     // 구독 상태 ( default 01 : 구독, 02 : 해지신청, 03: 구독해지, 04: 구독중지)
-    @Builder.Default
+    @ColumnDefault("'01'")
     @Column(name = "sub_state", nullable = false, length = 2)
-    private String subState = "01";
+    private String subState;
 
     // 구독중지일
     @Column(name = "suspend_date")

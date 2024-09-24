@@ -2,11 +2,9 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Entity
 @Builder
@@ -72,8 +70,8 @@ public class Exchange extends AbstractAuditingEntity implements Serializable {
     private String rejectReason;
 
     // 교환상태 (default 01 : 교환대기, 02 : 집하, 03 : 교환상품 배송출발, 04 : 교환상품 배송중, 05 : 교환상품 배송완료, 06 : 반려)
-    @Builder.Default
+    @ColumnDefault("'01'")
     @Column(name = "exchagne_state", nullable = false, length = 2)
-    private String exchagneState = "01";
+    private String exchagneState;
 
 }
