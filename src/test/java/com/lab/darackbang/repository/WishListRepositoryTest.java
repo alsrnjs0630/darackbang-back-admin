@@ -31,8 +31,6 @@ public class WishListRepositoryTest {
         WishList wishList = WishList.builder()
                 .member(member)
                 .product(product)
-                .createdDate(LocalDate.now())
-                .updatedDate(LocalDate.now())
                 .build();
 
         wishListRepository.save(wishList);

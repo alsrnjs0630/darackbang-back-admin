@@ -30,12 +30,12 @@ public class Cart   extends AbstractAuditingEntity  implements Serializable {
     private Long id;
 
     // 회원아이디
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     //장바구니 아이템
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<CartItem> cartItems;
 }

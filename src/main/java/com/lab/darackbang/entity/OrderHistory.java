@@ -36,7 +36,7 @@ public class OrderHistory extends AbstractAuditingEntity implements Serializable
     private LocalDate orderDate;
 
     //orderItems 매핑 설정
-    @OneToMany(mappedBy = "orderHistory", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "orderHistory")
     @ToString.Exclude
     private List<OrderItem> orderItems;
 }
