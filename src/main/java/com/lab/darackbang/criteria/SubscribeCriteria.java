@@ -2,6 +2,8 @@ package com.lab.darackbang.criteria;
 
 import com.lab.darackbang.dto.subscribe.SubscribeSearchDTO;
 import com.lab.darackbang.entity.Subscribe;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
@@ -13,11 +15,18 @@ import org.springframework.data.jpa.domain.Specification;
 public class SubscribeCriteria {
     public static Specification<Subscribe> byCriteria(SubscribeSearchDTO dto) {
         return (root, query, criteriaBuilder) -> {
+
             Specification<Subscribe> spec = Specification.where(null);
 
             // productName 필터 추가
+            // Join Subscribe and Product entities to access productName
+            //상품명은 구독에 있는 정보가 아니다. 상품명은 구독과 상품을 조인했을때 얻을수 잇는 정보이다.
+            //아래 코드는 해당 조인에 대한 사용방법이다.
             if (dto.getProductName() != null && !dto.getProductName().isEmpty()) {
-                spec = spec.and((root1, query1, cb) -> cb.like(root1.get("productName"), "%" + dto.getProductName() + "%"));
+                spec = spec.and((root1, query1, cb) -> {
+                    Join<Object, Object> productJoin = root1.join("product", JoinType.INNER);
+                    return cb.like(productJoin.get("productName"), "%" + dto.getProductName() + "%");
+                });
             }
 
             // 구독아이디로 필터 추가
