@@ -38,9 +38,9 @@ public class WishList extends AbstractAuditingEntity implements Serializable {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    // 삭제유무 ( default 0 : 등록, 1 : 삭제 )
-    @Column(name = "is_deleted", nullable = false, length = 1)
-    @Builder.Default
-    private Boolean isDeleted = false;
+//    // 삭제유무 ( default 0 : 등록, 1 : 삭제 )
+//    @Column(name = "is_deleted", nullable = false, length = 1)
+//    @Builder.Default
+//    private Boolean isDeleted = false;
 
 }

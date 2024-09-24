@@ -1,8 +1,6 @@
 package com.lab.darackbang.mapper;
 
-import com.lab.darackbang.dto.member.MemberDTO;
 import com.lab.darackbang.dto.product.ProductDTO;
-import com.lab.darackbang.entity.Member;
 import com.lab.darackbang.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
