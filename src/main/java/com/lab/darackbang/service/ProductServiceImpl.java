@@ -44,7 +44,8 @@ public class ProductServiceImpl implements ProductService {
         Specification<Product> spec = ProductCriteria.byCriteria(searchDTO);
 
         //페이지 번호(프론트에서는 1부터 시작하지만 실제로는 현재 페이지번호 -1)
-        Pageable correctedPageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
+        int pageNumber = (pageable.getPageNumber() < 1) ? 0 : pageable.getPageNumber() - 1;
+        Pageable correctedPageable = PageRequest.of(pageNumber, pageable.getPageSize(), pageable.getSort());
 
         // JPA 리포지토리를 사용하여 페이징을 적용한 상품 목록 조회 후, ProductMapper를 통해 ProductDTO로 변환
         return pageMapper.toDTO(productRepository.findAll(spec, correctedPageable).map(productMapper::toDTO));
