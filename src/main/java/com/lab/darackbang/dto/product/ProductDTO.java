@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -225,4 +226,7 @@ public class ProductDTO implements Serializable {
      */
     @Schema(description = "수정일자", example = "2023-01-02T10:00:00")
     private LocalDateTime updatedDate;
+
+    @Schema(description = "상품 이미지 파일")
+    private List<MultipartFile> productImageFiles;
 }

@@ -41,6 +41,9 @@ public class MemberRepositoryTest {
                     .gender("F")
                     .mobileNo("01028810137")
                     .mileage(0)
+                    .isBlacklist(false)
+                    .isDeleted(false)
+                    .memberState("01")
                     .build();
 
             List<MemberRole> memberRoles = new ArrayList<>();
