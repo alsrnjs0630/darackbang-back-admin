@@ -52,14 +52,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 // 로그인 설정
                 .formLogin(login -> login
-                        .loginPage("/api/member/login")  // 커스텀 로그인 페이지 설정
+                        .loginPage("/admin/login")  // 커스텀 로그인 페이지 설정
                         .successHandler(new APILoginSuccessHandler())  // 로그인 성공 시 핸들러
                         .failureHandler(new APILoginFailHandler()))  // 로그인 실패 시 핸들러
                 // 로그아웃 설정
                 .logout(logout -> logout
-                        .logoutUrl("/api/member/logout")  // 로그아웃 URL
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/api/member/logout", "POST")) // POST 방식으로 설정
-                        .logoutSuccessUrl("/api/products/list")  // 로그아웃 성공 후 리디렉션
+                        .logoutUrl("/admin/logout")  // 로그아웃 URL
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/admin/logout", "POST")) // POST 방식으로 설정
+                        .logoutSuccessUrl("/admin/products/list")  // 로그아웃 성공 후 리디렉션
                         .addLogoutHandler((request, response, authentication) -> {
                             HttpSession session = request.getSession();
                             session.invalidate();  // 세션 무효화
@@ -68,8 +68,8 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID", "access_token"))  // 쿠키 삭제
                 // 인증 요청에 대한 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/member/logout").permitAll()// 로그아웃 요청은 인증 없이 허용
-                                .requestMatchers("/api/products/**").permitAll()// 상품리스트 요청은 인증 없이 허용
+                                .requestMatchers("/admin/logout").permitAll()// 로그아웃 요청은 인증 없이 허용
+                                .requestMatchers("/admin/products/**").permitAll()// 상품리스트 요청은 인증 없이 허용
                         /*.requestMatchers("/api/products/**").hasAnyRole("USER", "MANAGER","ADMIN") // 상품리스틑 요청은 해당롤만 허용 */)
                 // 예외 처리 설정
                 .exceptionHandling(exceptions -> exceptions
