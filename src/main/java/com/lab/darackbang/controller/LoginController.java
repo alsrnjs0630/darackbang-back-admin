@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @Slf4j
-@RequestMapping("api")
+@RequestMapping("admin")
 public class LoginController {
-    @GetMapping("/member/logout")
+    @GetMapping("/logout")
     public String logout() {
         return "logout";
     }
