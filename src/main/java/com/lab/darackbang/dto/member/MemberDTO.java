@@ -164,10 +164,4 @@ public class MemberDTO implements Serializable {
     @Schema(description = "수정일시",requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDate updatedDate;
 
-    /**
-     * 회원롤정보
-     */
-    @NotNull
-    @Schema(description = "회원롤정보",requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<MemberRoleDTO> memberRoles;
 }

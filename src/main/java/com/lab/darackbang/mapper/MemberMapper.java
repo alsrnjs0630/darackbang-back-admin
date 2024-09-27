@@ -11,7 +11,7 @@ public interface MemberMapper {
 
     MemberDTO toDTO(Member member);
 
-    @Mapping(source = "memberRoles", target = "memberRoles")
+    @Mapping(target = "memberRoles", ignore = true)
     @Mapping(target = "memberCard", ignore = true)
     @Mapping(target = "subscribes", ignore = true)
     @Mapping(target = "orderHistories", ignore = true)

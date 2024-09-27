@@ -59,7 +59,6 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/admin/logout")  // 로그아웃 URL
                         .logoutRequestMatcher(new AntPathRequestMatcher("/admin/logout", "POST")) // POST 방식으로 설정
-                        .logoutSuccessUrl("/admin/products/list")  // 로그아웃 성공 후 리디렉션
                         .addLogoutHandler((request, response, authentication) -> {
                             HttpSession session = request.getSession();
                             session.invalidate();  // 세션 무효화
@@ -76,6 +75,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(new CustomAccessDeniedHandler()))  // 접근 권한 없을 시 처리 핸들러
                 .build();
     }
+
 
     // CORS(Cross-Origin Resource Sharing) 설정을 정의하는 Bean
     @Bean

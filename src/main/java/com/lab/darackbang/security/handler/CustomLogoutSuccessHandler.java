@@ -20,6 +20,6 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         log.info("로그아웃이 성공적으로 처리되었습니다.");
 
         // 리디렉션 설정(임시)
-        response.sendRedirect("/api/products/list");
+        response.sendRedirect("/admin/products/list");
     }
 }
