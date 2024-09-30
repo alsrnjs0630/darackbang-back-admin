@@ -3,14 +3,18 @@ package com.lab.darackbang.service;
 import com.lab.darackbang.dto.common.PageDTO;
 import com.lab.darackbang.dto.product.ProductDTO;
 import com.lab.darackbang.dto.product.ProductSearchDTO;
-import com.lab.darackbang.entity.Product;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.util.Map;
 
 public interface ProductService {
 
-    Map<String,String> create(ProductDTO productDTO);
+    Map<String,String> create(ProductDTO productDTO) throws IOException;
+
+    ResponseEntity<Resource> getProductImage(String imageName);
 
     PageDTO<ProductDTO> findAll(ProductSearchDTO searchDTO, Pageable pageable);
 }

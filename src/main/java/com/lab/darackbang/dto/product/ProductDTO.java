@@ -229,4 +229,7 @@ public class ProductDTO implements Serializable {
 
     @Schema(description = "상품 이미지 파일")
     private List<MultipartFile> productImageFiles;
+
+    @Schema(description = "상품 이미지 파일명")
+    private List<String> uploadFileNames;
 }

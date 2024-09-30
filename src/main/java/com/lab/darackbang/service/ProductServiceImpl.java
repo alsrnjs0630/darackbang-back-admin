@@ -1,5 +1,6 @@
 package com.lab.darackbang.service;
 
+import com.lab.darackbang.common.utils.ImageUtil;
 import com.lab.darackbang.criteria.ProductCriteria;
 import com.lab.darackbang.dto.common.PageDTO;
 import com.lab.darackbang.dto.product.ProductDTO;
@@ -11,17 +12,18 @@ import com.lab.darackbang.mapper.ProductMapper;
 import com.lab.darackbang.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -35,35 +37,48 @@ public class ProductServiceImpl implements ProductService {
 
     private final PageMapper pageMapper;
 
+    private final ImageUtil imageUtil;
 
+    //상품 등록
     @Override
-    public Map<String, String> create(ProductDTO productDTO) {
+    public Map<String, String> create(ProductDTO productDTO) throws IOException {
 
+        log.info("상품 등록 시작");
+
+        // 상품 디폴트값 설정
         productDTO.setIsVisible(Boolean.TRUE);
         productDTO.setIsSoldout(Boolean.FALSE);
         productDTO.setIsGmo(Boolean.FALSE);
         productDTO.setIsDeleted(Boolean.FALSE);
         productDTO.setWishCount(0);
 
+        // 사용자가 입력한 값(DTO) 엔티티로 변환
         Product product = productMapper.toEntity(productDTO);
 
-        List<ProductImage> productImages = Optional.ofNullable(productDTO.getProductImageFiles())
-                .map(List::stream)  //List를 stream으로 변환
-                .orElseGet(Stream::empty)  // productImageFiles가 null이면 빈 스트림 반환
-                //각 MultipartFile 객체(file)를 ProductImage 객체로 변환하는 로직을 스트림에서 처리
-                .map(file -> {      //getOriginalFilename()을 사용하기 때문에 file도 MultipartFile의 객체라고 인식
-                    ProductImage productImage = new ProductImage();
-                    productImage.setProductFileName(file.getOriginalFilename());
-                    productImage.setProduct(product);
-                    return productImage;
-                })
-                .collect(Collectors.toList());
+        List<String> uploadFileNames = imageUtil.saveImages("product", productDTO.getProductImageFiles());
 
-        product.setProductImages(productImages);
+        List<ProductImage> productImageList = new ArrayList<>();
+
+        uploadFileNames.forEach(imageFileName -> {
+            ProductImage productImage = new ProductImage();
+            productImage.setProductFileName(imageFileName);
+            productImage.setProduct(product);
+            productImageList.add(productImage);
+        });
+
+        product.setProductImages(productImageList);
+
+        log.info("상품 등록 끝");
 
         productRepository.save(product);
 
         return Map.of("RESULT", "SUCCESS");
+    }
+
+    //업로드한 이미지 조회
+    @Override
+    public ResponseEntity<Resource> getProductImage(String imageName) {
+        return imageUtil.getImage("product", imageName);
     }
 
     /**
