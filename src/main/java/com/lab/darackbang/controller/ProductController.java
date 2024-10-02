@@ -43,4 +43,10 @@ public class ProductController {
         log.info("상품리스트 출력 요청 성공");
         return productService.findAll(productSearchDTO, pageable);
     }
+
+    @PutMapping("/products/{pno}")
+    public Map<String, String> modify(@PathVariable String pno, ProductDTO productDTO) throws IOException {
+        log.info("상품 수정 요청 성공");
+        return productService.update(pno, productDTO);
+    }
 }

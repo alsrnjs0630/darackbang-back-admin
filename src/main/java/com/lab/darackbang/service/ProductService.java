@@ -17,4 +17,6 @@ public interface ProductService {
     ResponseEntity<Resource> getProductImage(String imageName);
 
     PageDTO<ProductDTO> findAll(ProductSearchDTO searchDTO, Pageable pageable);
+
+    Map<String, String> update(String pno, ProductDTO productDTO) throws IOException;
 }

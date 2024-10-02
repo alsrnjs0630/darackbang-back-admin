@@ -93,10 +93,18 @@ public class ImageUtil {
         //업로드된 이미지들의 파일명을 담는 리스트 선언
         List<String> uploadedImageNames = new ArrayList<>();
 
-        //람다식에서 매개변수를 사용하려면 이름을 꼭 붙여야함 -> image
-        //변수 images의 타입이 List<MultipartFile>이기 때문에 images를 스트림으로 변환해도
-        //images 리스트 안에 있는 image 변수가 MultipartFile 타입이라는 것을 자동으로 유추
-        images.stream().forEach(image -> {
+        //변수 images는 MultipartFile 타입인 객체들이 모여있는 List
+        //for문을 통해 업로드한 이미지 파일의 수(images.size())만큼 이미지 파일명을 생성하고 서버에 저장
+        for(int i = 0; i < images.size(); i++) {
+            //images.get(i): 리스트 images의 i번째 파일을 MultipartFile 타입인 변수 image에 할당
+            MultipartFile image = images.get(i);
+
+            // 이미지가 비어있는지 확인
+            if (image.isEmpty()) {
+                log.warn("빈 이미지 파일이 전달되었습니다."); // 로깅
+                continue; // 빈 이미지 파일은 건너뜀
+            }
+
             //UUID와 원본 이미지 파일명(multipartFile.getOriginalFilename())을 결합해 업로드된 이미지 파일명 생성
             String imageName = UUID.randomUUID() + "_" + image.getOriginalFilename();
 
@@ -121,32 +129,35 @@ public class ImageUtil {
                 //IOException: 입출력 작업 중에 발생할 수 있는 예외를 처리하기 위한 클래스
                 Files.copy(image.getInputStream(), imageUploadedPath);
 
+
                 //# 섬네일 생성
-                //List<MultipartFile> images 안의 변수들 image의 타입이 'image/jpeg', 'image/png' … 인지 확인
-                String contentType = image.getContentType();
-                //만약 contentType이 null값이 아니고 'image'로 시작한다면
-                if (contentType != null && contentType.startsWith("image")) {
-                    //thumbnailPath라는 Path 객체에 uploadPath(이미지를 올린 경로)와
-                    //문자열 s_ + 이미지 파일명(UUID를 이용해 생성한 것)을 합친 파일 정보 대입
-                    Path thumbnailPath = Paths.get(addUploadPath, "s_" + imageName);
+                //첫 번째로 업로드한 이미지 파일(i=0)인 경우에만 섬네일 생성
+                if (i == 0) {
+                    //List<MultipartFile> images 안의 변수들 image의 타입이 'image/jpeg', 'image/png' … 인지 확인
+                    String contentType = image.getContentType();
+                    //만약 contentType이 null값이 아니고 'image'로 시작한다면
+                    if (contentType != null && contentType.startsWith("image")) {
+                        //thumbnailPath라는 Path 객체에 uploadPath(이미지를 올린 경로)와
+                        //문자열 s_ + 이미지 파일명(UUID를 이용해 생성한 것)을 합친 파일 정보 대입
+                        Path thumbnailPath = Paths.get(addUploadPath, "s_" + imageName);
 
-                    //Thumbnails: 이미지 리사이징(=섬네일 생성)을 쉽게 해주는 라이브러리
-                    //of(): 리사이징을 할 이미지 지정 -> imageUploadedPath에 저장된 이미지 파일
-                    //imageUploadedPath.toFile(): Path 객체 타입인 imageUploadedPath 변수를 File 타입으로 변환
-                    //-> imageUploadedPath에 저장된 이미지 파일 = 업로드된 이미지 파일을 읽어옴
-                    Thumbnails.of(imageUploadedPath.toFile())
-                            //생성할 섬네일의 너비와 높이 지정(단위: px). 비율 유지 X
-                            .size(300,300)
-                            //toFile(): 리사이즈된 이미지를 파일로 저장.
-                            //thumbnailPath.toFile(): thumbnailPath(Path 타입)를 File 타입으로 변환
-                            //-> toFile() 메서드는 File 객체 타입을 매개변수로 받기 때문에
-                            //thumbnailPath를 .toFile()을 이용해 File 객체 타입으로 변환
-                            //※ .size() 뒤의 .toFile()과 thumbnailPath 뒤에 오는 .toFile()은 다른 역할을 함
-                            //각각 다른 객체에 속하기 때문에 글자만 똑같을 뿐 아예 다른 메서드임
-                            //(전자: Thumbnails 클래스의 메서드, 후자: Path 객체의 메서드)
-                            .toFile(thumbnailPath.toFile());
+                        //Thumbnails: 이미지 리사이징(=섬네일 생성)을 쉽게 해주는 라이브러리
+                        //of(): 리사이징을 할 이미지 지정 -> imageUploadedPath에 저장된 이미지 파일
+                        //imageUploadedPath.toFile(): Path 객체 타입인 imageUploadedPath 변수를 File 타입으로 변환
+                        //-> imageUploadedPath에 저장된 이미지 파일 = 업로드된 이미지 파일을 읽어옴
+                        Thumbnails.of(imageUploadedPath.toFile())
+                                //생성할 섬네일의 너비와 높이 지정(단위: px). 비율 유지 X
+                                .size(300,300)
+                                //toFile(): 리사이즈된 이미지를 파일로 저장.
+                                //thumbnailPath.toFile(): thumbnailPath(Path 타입)를 File 타입으로 변환
+                                //-> toFile() 메서드는 File 객체 타입을 매개변수로 받기 때문에
+                                //thumbnailPath를 .toFile()을 이용해 File 객체 타입으로 변환
+                                //※ .size() 뒤의 .toFile()과 thumbnailPath 뒤에 오는 .toFile()은 다른 역할을 함
+                                //각각 다른 객체에 속하기 때문에 글자만 똑같을 뿐 아예 다른 메서드임
+                                //(전자: Thumbnails 클래스의 메서드, 후자: Path 객체의 메서드)
+                                .toFile(thumbnailPath.toFile());
+                    }
                 }
-
                 //업로드된 이미지 파일명을 리스트에 담음
                 uploadedImageNames.add(imageName);
 
@@ -157,8 +168,7 @@ public class ImageUtil {
                 //나중에 사용자 정의 Exception을 발생시켜야함
             }
 
-        });
-
+        }
         return uploadedImageNames;
     }
 
@@ -186,11 +196,11 @@ public class ImageUtil {
 
             try (InputStream inputStream = image.getInputStream()) {
                 Files.copy(image.getInputStream(), imageUploadedPath);
+                uploadedImageNames.add(imageName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            uploadedImageNames.add(imageName);
         });
 
         return uploadedImageNames;
@@ -253,5 +263,40 @@ public class ImageUtil {
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 
-}
+    //# 서버에 업로드된 이미지 파일들을 삭제하는 메서드
+    //첨부파일은 수정이라는 개념이 존재하지 않으므로 이미지 변경을 원할 경우 삭제 후 새로운 파일 업로드
+    //이미지가 업로드된 경로의 정보(addUploadedPath)를 알고 있기 때문에
+    //이미지 파일명(imageName)만 매개변수로 받아도 Path 객체를 구해 서버에 업로드된 이미지 파일을 찾아서 삭제할 수 있음
+    public void deleteImage(String path, List<String> uploadedImageNames) {
+        //경로가 추가된 addUploadPath 변수 선언
+        String addUploadPath = uploadPath + File.separator + path;
 
+        //업로드된 이미지 파일이 없다면 삭제할 이미지 파일도 없으므로 메서드 종료
+        if(uploadedImageNames == null || uploadedImageNames.size() == 0) {
+            return;
+        }
+
+        //imageName: 업로드된 이미지 파일명들이 담긴 리스트 안에 있는 하나의 이미지 파일명
+        uploadedImageNames.stream().forEach(imageName -> {
+            //이미지 파일명을 이용해 섬네일 파일명 변수 생성
+            String thumbnailFileName = "s_" + imageName;
+            //섬네일이 업로드된 Path 객체 구하기
+            Path thumbnailUploadedPath = Paths.get(addUploadPath + File.separator + thumbnailFileName);
+            //이미지 파일이 업로드된 Path 객체 구하기
+            Path imageUploadedPath = Paths.get(addUploadPath + File.separator + imageName);
+
+            try {
+                //deleteIfExists(): Files 클래스에 포함된 메서드. 매개변수로 Path 타입 객체를 받음
+                //업로드된 이미지 파일(섬네일 파일)의 Path 객체가 존재하면 그 Path 객체가 가리키는 실제 파일 삭제
+                Files.deleteIfExists(thumbnailUploadedPath);
+                Files.deleteIfExists(imageUploadedPath);
+            } catch (IOException e) {
+                //예외가 발생했을 때 현재 메서드를 종료하고 발생한 예외를 상위 호출자에게 알려줌
+                //마지막에 return할 값이 없으므로(=프로그램의 흐름을 계속 유지할 필요가 없으므로)
+                //e.printStackTrace()를 쓰지 않음
+                throw new RuntimeException(e.getMessage());
+            }
+        });
+    }
+
+}

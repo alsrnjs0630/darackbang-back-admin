@@ -12,4 +12,5 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
         JpaSpecificationExecutor<Product> {
 
     Optional<Product> findTopByOrderByPnoDesc();
+    Optional<Product> findByPno(String pno);
 }
