@@ -9,6 +9,7 @@ import com.lab.darackbang.entity.Product;
 import com.lab.darackbang.entity.ProductImage;
 import com.lab.darackbang.mapper.PageMapper;
 import com.lab.darackbang.mapper.ProductMapper;
+import com.lab.darackbang.repository.ProductImageRepository;
 import com.lab.darackbang.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,27 +32,29 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-
+    private final ProductImageRepository productImageRepository;
     private final ProductMapper productMapper;
-
     private final PageMapper pageMapper;
-
     private final ImageUtil imageUtil;
 
-    //상품 등록
+    // # 상품 등록
     @Override
-    public Map<String, String> create(ProductDTO productDTO) throws IOException {
+    public Map<String, String> create(ProductDTO productDTO) {
 
         log.info("상품 등록 시작");
 
         //상품번호 생성
-        String pno =null;
+        String pno = null;
 
         Optional<Product> findProduct = productRepository.findTopByOrderByPnoDesc();
 
         if(findProduct.isPresent()){
+            /*
+            get(): Optional 객체에서 실제로 값(여기선 Product 객체)을 꺼낼 때 사용
+            Product 객체의 pno 값을 가져와야하므로 Product 객체에 접근해야함
+             */
             pno = genPno(findProduct.get().getPno());
-        }else{
+        } else{
             pno = "TP0000000001";
         }
 
@@ -67,7 +69,16 @@ public class ProductServiceImpl implements ProductService {
         // 사용자가 입력한 값(DTO) 엔티티로 변환
         Product product = productMapper.toEntity(productDTO);
 
-        List<String> uploadFileNames = imageUtil.saveImages("product", productDTO.getProductImageFiles());
+        /*
+        Long.parseLong(pno.substring(2)): 상품번호에서 증가하는 숫자 부분만 추출
+        String.format(): 한 자리 숫자를 두 자리로 포맷팅
+        (1) 0: 빈자리를 0으로 채움
+        (2) 2: 전체 자리 수를 두 자리로 맞춤
+        ex) TP0000000002 -> 02
+        */
+        String formattedPno = String.format("%02d", Long.parseLong(pno.substring(2)));
+        List<String> uploadFileNames = imageUtil
+                .uploadImages("product", productDTO.getProductImageFiles(), formattedPno);
 
         List<ProductImage> productImageList = new ArrayList<>();
 
@@ -87,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
         return Map.of("RESULT", "SUCCESS");
     }
 
-    //상품번호 생성 메서드
+    // # 상품번호 생성 메서드
     String genPno(String pno) {
 
         if(pno != null) {
@@ -108,10 +119,10 @@ public class ProductServiceImpl implements ProductService {
         return "TP0000000001";
     }
 
-    //업로드한 이미지 조회
+    // # 업로드한 이미지 조회
     @Override
     public ResponseEntity<Resource> getProductImage(String imageName) {
-        return imageUtil.getImage("product", imageName);
+        return imageUtil.getImages("product", imageName);
     }
 
     /**
@@ -135,19 +146,19 @@ public class ProductServiceImpl implements ProductService {
         return pageMapper.toDTO(productRepository.findAll(spec, correctedPageable).map(productMapper::toDTO));
     }
 
-    //상품 수정
+    // # 상품 수정
     @Override
-    public Map<String, String> update(String pno, ProductDTO productDTO) throws IOException {
+    public Map<String, String> update(String pno, ProductDTO productDTO) {
 
         log.info("상품 수정 시작, pno: {}", pno);
 
-        // 해당 ID의 상품을 찾기
+        // 해당 pno의 상품을 찾기
         Product existingProduct = productRepository.findByPno(pno)
                 .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다."));
 
         // 입력된 값이 있는 경우에만 업데이트
-        //상품을 실제로 수정할 때 null이 아닌 값은 이미 입력돼있으므로
-        //포스트맨에서 상품 수정 시 nullable=false인 칼럼들에도 값을 넣어준 후 수정해야한다.
+        // 상품을 실제로 수정할 때 null이 아닌 값은 이미 입력돼있으므로
+        // 포스트맨에서 상품 수정 시 nullable=false인 칼럼들에도 값을 넣어준 후 수정해야함
         if (!Objects.equals(existingProduct.getPno(), productDTO.getPno())) {
             existingProduct.setPno(productDTO.getPno());
         }
@@ -230,10 +241,17 @@ public class ProductServiceImpl implements ProductService {
             List<String> existingImageNames = existingProduct.getProductImages().stream()
                     .map(ProductImage::getProductFileName)
                     .collect(Collectors.toList());
-            imageUtil.deleteImage("product", existingImageNames);
+            imageUtil.deleteImages("product", existingImageNames);
+
+            // DB에서 ProductImage 삭제
+            existingProduct.getProductImages().clear(); // 연관관계를 끊기 위해 리스트를 clear()해줌
+            // existingProduct와 연결된 모든 ProductImage 삭제
+            productImageRepository.deleteAllByProduct(existingProduct);
 
             // 새 이미지 업로드
-            List<String> newUploadFileNames = imageUtil.saveImages("product", productDTO.getProductImageFiles());
+            String formattedPno = String.format("%02d", Long.parseLong(existingProduct.getPno().substring(2)));
+            List<String> newUploadFileNames = imageUtil
+                    .uploadImages("product", productDTO.getProductImageFiles(), formattedPno);
 
             // 새 이미지로 교체 (새 이미지가 있는 경우에만)
             if (newUploadFileNames != null && !newUploadFileNames.isEmpty()) {
@@ -251,10 +269,42 @@ public class ProductServiceImpl implements ProductService {
             List<String> existingImageNames = existingProduct.getProductImages().stream()
                     .map(ProductImage::getProductFileName)
                     .collect(Collectors.toList());
-            imageUtil.deleteImage("product", existingImageNames);
+            imageUtil.deleteImages("product", existingImageNames);
+
+            existingProduct.getProductImages().clear();
+            productImageRepository.deleteAllByProduct(existingProduct);
         }
 
         log.info("상품 수정 완료, pno: {}", pno);
+
+        productRepository.save(existingProduct);
+
+        return Map.of("RESULT", "SUCCESS");
+    }
+
+    // # 상품 삭제
+    @Override
+    public Map<String, String> delete(String pno) {
+
+        log.info("상품 삭제 시작, pno: {}", pno);
+
+        // 해당 pno의 상품을 찾기
+        Product existingProduct = productRepository.findByPno(pno)
+                .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다."));
+
+        // 삭제할 상품의 isDeleted 값 변경
+        existingProduct.setIsDeleted(true);
+
+        // 기존 이미지 삭제
+        List<String> existingImageNames = existingProduct.getProductImages().stream()
+                .map(ProductImage::getProductFileName)
+                .collect(Collectors.toList());
+        imageUtil.deleteImages("product", existingImageNames);
+
+        // DB에서 ProductImage 삭제
+        existingProduct.getProductImages().clear(); // 연관관계를 끊기 위해 리스트를 clear()해줌
+        // existingProduct와 연결된 모든 ProductImage 삭제
+        productImageRepository.deleteAllByProduct(existingProduct);
 
         productRepository.save(existingProduct);
 

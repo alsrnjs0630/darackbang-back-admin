@@ -1,6 +1,5 @@
 package com.lab.darackbang.controller;
 
-import com.lab.darackbang.common.utils.ImageUtil;
 import com.lab.darackbang.dto.common.PageDTO;
 import com.lab.darackbang.dto.product.ProductDTO;
 import com.lab.darackbang.dto.product.ProductSearchDTO;
@@ -14,7 +13,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.Map;
 
 @RequestMapping("admin")
@@ -26,7 +24,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/products")
-    public Map<String, String> register(ProductDTO productDTO) throws IOException {
+    public Map<String, String> register(ProductDTO productDTO) {
         log.info("상품 등록 요청 성공");
         return productService.create(productDTO);
     }
@@ -45,8 +43,14 @@ public class ProductController {
     }
 
     @PutMapping("/products/{pno}")
-    public Map<String, String> modify(@PathVariable String pno, ProductDTO productDTO) throws IOException {
+    public Map<String, String> modify(@PathVariable String pno, ProductDTO productDTO) {
         log.info("상품 수정 요청 성공");
         return productService.update(pno, productDTO);
+    }
+
+    @DeleteMapping("/products/{pno}")
+    public Map<String, String> delete(@PathVariable String pno) {
+        log.info("상품 삭제 요청 성공");
+        return productService.delete(pno);
     }
 }

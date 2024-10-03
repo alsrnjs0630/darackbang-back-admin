@@ -1,5 +1,6 @@
 package com.lab.darackbang.repository;
 
+import com.lab.darackbang.entity.Product;
 import com.lab.darackbang.entity.ProductImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -12,4 +13,5 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
         JpaSpecificationExecutor<ProductImage> {
 
     List<ProductImage> findByProductId(Long productId);
+    void deleteAllByProduct(Product product);
 }
