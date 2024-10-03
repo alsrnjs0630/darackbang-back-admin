@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
 
         log.info("상품 등록 시작");
 
-        //상품번호 생성
+        // 상품번호 생성
         String pno = null;
 
         Optional<Product> findProduct = productRepository.findTopByOrderByPnoDesc();
@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
             /*
             get(): Optional 객체에서 실제로 값(여기선 Product 객체)을 꺼낼 때 사용
             Product 객체의 pno 값을 가져와야하므로 Product 객체에 접근해야함
-             */
+            */
             pno = genPno(findProduct.get().getPno());
         } else{
             pno = "TP0000000001";
@@ -157,8 +157,10 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다."));
 
         // 입력된 값이 있는 경우에만 업데이트
-        // 상품을 실제로 수정할 때 null이 아닌 값은 이미 입력돼있으므로
-        // 포스트맨에서 상품 수정 시 nullable=false인 칼럼들에도 값을 넣어준 후 수정해야함
+        /*
+        상품을 실제로 수정할 때 null이 아닌 값은 이미 입력돼있으므로
+        포스트맨에서 상품 수정 시 nullable=false인 칼럼들에도 값을 넣어준 후 수정해야함
+        */
         if (!Objects.equals(existingProduct.getPno(), productDTO.getPno())) {
             existingProduct.setPno(productDTO.getPno());
         }
@@ -238,8 +240,22 @@ public class ProductServiceImpl implements ProductService {
         // 기존 이미지 파일 삭제 및 새 이미지 저장
         if (productDTO.getProductImageFiles() != null && !productDTO.getProductImageFiles().isEmpty()) {
             // 기존 이미지 삭제
+            /*
+            existingImageNames: 기존 이미지 파일명들을 담을 리스트 변수 생성
+            .getProductImages().stream(): 가져온 List<ProductImage> productImages를
+            스트림으로 변환 -> Stream<ProductImage> 생성
+            */
             List<String> existingImageNames = existingProduct.getProductImages().stream()
+                    /*
+                    map()
+                    (1) 스트림의 각 요소에 대해 주어진 함수를 적용한 결과로 새로운 스트림 생성
+                    (2) 원래의 요소는 변경 X, 변환된 새로운 요소들로 이루어진 스트림 반환
+                    (3) 여기선 스트림(ProductImage 객체가 여러 개 모여있는 List) 안에 있는
+                        각 ProductImage 객체(원래의 요소)에 대해 getproductFileName()를 실행하고,
+                        변환값(String 타입의 productFileName)들로 이루어진 스트림을 생성
+                    */
                     .map(ProductImage::getProductFileName)
+                    // 생성된 스트림(Stream<String>)의 각 요소들을 리스트(List<String>)에 추가
                     .collect(Collectors.toList());
             imageUtil.deleteImages("product", existingImageNames);
 

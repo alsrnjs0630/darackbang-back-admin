@@ -118,7 +118,6 @@ public class ImageUtil {
             }
 
             // 상품번호, UUID, 원본 이미지 파일명(multipartFile.getOriginalFilename())을 결합해 업로드할 이미지 파일명 생성
-            // Long 타입인 pno는 String 타입 변수에 대입할 때 자동으로 문자열로 변환됨 (toString() 호출 X)
             String imageName = pno + "_" + UUID.randomUUID() + "_" + image.getOriginalFilename();
 
             /*
@@ -319,9 +318,11 @@ public class ImageUtil {
                 Files.deleteIfExists(thumbnailUploadedPath);
                 Files.deleteIfExists(imageUploadedPath);
             } catch (IOException e) {
-                // 예외가 발생했을 때 현재 메서드를 종료하고 발생한 예외를 상위 호출자에게 알려줌
-                // 마지막에 return할 값이 없으므로(=프로그램의 흐름을 계속 유지할 필요가 없으므로)
-                // e.printStackTrace()를 쓰지 않음
+                /*
+                예외가 발생했을 때 현재 메서드를 종료하고 발생한 예외를 상위 호출자에게 알려줌
+                마지막에 return할 값이 없으므로(=프로그램의 흐름을 계속 유지할 필요가 없으므로)
+                e.printStackTrace()를 쓰지 않음
+                */
                 throw new RuntimeException(e.getMessage());
             }
         });
