@@ -3,7 +3,11 @@ package com.lab.darackbang.dto.member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,7 +21,8 @@ import java.util.List;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class MemberDTO implements Serializable {
+
+public class MemberReqDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /**
@@ -164,5 +169,4 @@ public class MemberDTO implements Serializable {
     @NotNull
     @Schema(description = "수정일시",requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDateTime updatedDate;
-
 }

@@ -1,6 +1,7 @@
 package com.lab.darackbang.dto.product;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,9 +24,26 @@ public class ProductImageDTO implements Serializable {
     private Long id;
 
     /**
+     * 이미지 타입
+     */
+    @Schema(description = "이미지 타입", example = "INFO")
+    private String productType;
+
+    /**
      * 이미지 파일명
      */
     @Schema(description = "이미지 파일명", example = "product_image.jpg")
     private String productFileName;
+
+    /**
+     * 이미지 정렬순서
+     */
+    @Schema(description = "정렬순서", example = "1")
+    private Integer sortNum;
+
+
+    //이미지파일 삭제유무
+    @Schema(description = "삭제유무")
+    private Boolean isDeleted;
 
 }

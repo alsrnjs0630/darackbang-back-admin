@@ -3,7 +3,6 @@ package com.lab.darackbang.mapper;
 
 import com.lab.darackbang.dto.common.PageDTO;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 
 import java.util.stream.Collectors;
@@ -23,12 +22,12 @@ public interface PageMapper {
      * @param page Spring Data의 Page 객체
      * @return 변환된 PageDTO 객체
      */
-    default <E> PageDTO<E> toDTO(Page<E> page) {
+    default <E,S> PageDTO<E,S> toDTO(Page<E> page, S search) {
         if (page == null) {
             return null;
         }
 
-        PageDTO<E> pageDTO = new PageDTO<>();
+        PageDTO<E,S> pageDTO = new PageDTO<>();
 
         // 콘텐츠 매핑
         pageDTO.setContents(page.getContent());
@@ -50,6 +49,8 @@ public interface PageMapper {
         // 이전 및 다음 페이지 번호 설정
         pageDTO.setPrevPage(page.hasPrevious() ? page.getNumber() : null);
         pageDTO.setNextPage(page.hasNext() ? page.getNumber() + 2 : null);  // 1부터 시작하는 페이지 번호로 조정
+
+        pageDTO.setSearch(search);
 
         return pageDTO;
     }

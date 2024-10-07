@@ -6,9 +6,6 @@ import lombok.*;
 import java.io.Serializable;
 
 @Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -23,8 +20,20 @@ public class ProductImage implements Serializable {
     private Long id;
 
     //이미지파일명
+    @Column(name = "product_type", nullable = false)
+    private String productType;
+
+    //이미지파일명
     @Column(name = "product_file_name", nullable = false)
     private String productFileName;
+
+    //이미지파일명
+    @Column(name = "sort_num", nullable = false)
+    private Integer sortNum;
+
+    //이미지파일 삭제유무
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
 
     //상품아이디(상품정보 FK)
     //@ManyToOne(fetch = FetchType.LAZY): Product에서 ProductImage를 접근할 때만 지연 로딩

@@ -1,6 +1,8 @@
 package com.lab.darackbang.security.handler;
 
 
+import com.google.gson.Gson;
+import com.lab.darackbang.security.dto.LoginDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 
 @Slf4j
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
@@ -16,10 +20,15 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest request,
                                 HttpServletResponse response,
                                 Authentication authentication) throws IOException {
-        // 로그아웃 성공 후 추가 작업 수행
-        log.info("로그아웃이 성공적으로 처리되었습니다.");
 
-        // 리디렉션 설정(임시)
-        response.sendRedirect("/admin/products/list");
+        Map<String, String> message = Map.of("RESULT","LOGOUT SUCCESS");
+
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(message);
+
+        response.setContentType("application/json; charset=UTF-8");
+        PrintWriter printWriter = response.getWriter();
+        printWriter.println(jsonStr);
+        printWriter.close();
     }
 }

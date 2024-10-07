@@ -26,14 +26,11 @@ public class Payment extends AbstractAuditingEntity implements Serializable {
     private Long id;
 
     // 결제번호
-    @Column(name = "payment_id", nullable = false, length = 50)
-    private String paymentId;
-
-    // 회원 아이디
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    @ToString.Exclude
-    private Member member;
+    @Column(name = "payment_no", nullable = false, length = 50)
+    private String paymentNo;
+    // 결제일
+    @Column(name = "payment_date", nullable = false)
+    private LocalDate paymentDate;
 
     // 결제금액
     @Column(name = "payment_price", nullable = false, length = 7)
@@ -44,12 +41,11 @@ public class Payment extends AbstractAuditingEntity implements Serializable {
     @Column(name = "payment_state", nullable = false, length = 2)
     private String paymentState;
 
-    // 결제일
-    @Column(name = "payment_date", nullable = false)
-    private LocalDate paymentDate;
-
     // 결제 실패 원인
     @Column(name = "fail_reason", length = 1000)
     private String failReason;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 }

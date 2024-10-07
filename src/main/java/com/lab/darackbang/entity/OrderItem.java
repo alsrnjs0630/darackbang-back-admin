@@ -29,8 +29,8 @@ public class OrderItem extends AbstractAuditingEntity implements Serializable {
 
     //구매내역아이디
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_history_id", nullable = false)
-    private OrderHistory orderHistory;
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     //상품금액
     @Column(name = "product_price", nullable = false, length = 7)

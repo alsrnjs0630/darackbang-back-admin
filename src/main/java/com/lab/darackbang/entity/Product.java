@@ -10,9 +10,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -168,5 +165,4 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     @Transient
     @ToString.Exclude
     private List<WishList> wishLists;
-
 }

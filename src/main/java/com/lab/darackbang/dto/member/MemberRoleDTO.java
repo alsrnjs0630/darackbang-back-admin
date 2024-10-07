@@ -26,20 +26,14 @@ public class MemberRoleDTO implements Serializable {
      * 인덱스번호
      */
     @NotNull
-    @Schema(description = "인덱스번호",requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "인덱스번호", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long id;
 
     /**
      * 사용자 롤
      */
     @NotNull
-    @Schema(description = "회원롤",requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "회원롤", requiredMode = Schema.RequiredMode.REQUIRED)
     private Role role;
 
-    /**
-     * 사용자 정보
-     */
-    @NotNull
-    @Schema(description = "회원정보",requiredMode = Schema.RequiredMode.REQUIRED)
-    private MemberDTO member;
 }

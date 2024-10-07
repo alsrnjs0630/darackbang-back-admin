@@ -1,14 +1,13 @@
 package com.lab.darackbang.dto.product;
 
+import com.lab.darackbang.dto.common.FileInfoDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -18,7 +17,9 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-public class ProductDTO implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProductReqDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -142,13 +143,6 @@ public class ProductDTO implements Serializable {
     private String saleCompanyInfo;
 
     /**
-     * 삭제 여부
-     */
-    @NotNull
-    @Schema(description = "삭제 여부", example = "false")
-    private Boolean isDeleted;
-
-    /**
      * 품절 여부
      */
     @NotNull
@@ -213,17 +207,6 @@ public class ProductDTO implements Serializable {
      * 상품 이미지 리스트
      */
     @Schema(description = "상품 이미지 리스트")
-    private List<ProductImageDTO> productImages;
+    private String productImages;
 
-    /**
-     * 생성일자
-     */
-    @Schema(description = "생성일자", example = "2023-01-01T10:00:00")
-    private LocalDateTime createdDate;
-
-    /**
-     * 수정일자
-     */
-    @Schema(description = "수정일자", example = "2023-01-02T10:00:00")
-    private LocalDateTime updatedDate;
 }

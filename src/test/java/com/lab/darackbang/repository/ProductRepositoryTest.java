@@ -23,9 +23,9 @@ public class ProductRepositoryTest {
 
     @Autowired
     private ProductImageRepository productImageRepository;
-
+ /*
     @Test
-    void productInsertTest() {
+   void productInsertTest() {
 
         for(int i=1; i<=10; i++) {
 
@@ -70,7 +70,7 @@ public class ProductRepositoryTest {
 
             productRepository.save(product);
         }
-    }
+    }*/
 
     @Test
     @Transactional

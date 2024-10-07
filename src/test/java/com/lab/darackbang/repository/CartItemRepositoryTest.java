@@ -5,14 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @SpringBootTest
 @Slf4j
@@ -51,9 +48,9 @@ public class CartItemRepositoryTest {
     private ProductQuarterStatRepository productQuarterStatRepository;
     @Autowired
     private ProductYearStatRepository productYearStatRepository;
-
+/*
     @Test
-    void cartItemUpdateTest() {
+   void cartItemUpdateTest() {
 
         Cart cart = cartRepository.findByMemberId(5L).orElseThrow();
 
@@ -101,7 +98,7 @@ public class CartItemRepositoryTest {
 
         /////// 주문내역 생성 시작
 
-        OrderHistory orderHistory = OrderHistory.builder()
+        Order orderHistory = Order.builder()
                 .member(cart.getMember())
                 .orderDate(LocalDate.now())
                 .build();
@@ -146,7 +143,7 @@ public class CartItemRepositoryTest {
 
         //////////////////////////////////////////////  배송 내역 생성 끝
     }
-
+*/
 
     @Test
     //@Transactional

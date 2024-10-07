@@ -2,18 +2,20 @@ package com.lab.darackbang.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "tbl_member")
 public class Member extends AbstractAuditingEntity implements Serializable {
 
@@ -117,7 +119,7 @@ public class Member extends AbstractAuditingEntity implements Serializable {
 
     // 구매내역 테이블 (구매내역) 매핑 설정
     @OneToMany(mappedBy = "member")
-    private List<OrderHistory> orderHistories;
+    private List<Order> orderHistories;
 
     // 장바구니 테이블 (cart) 매핑 설정
     @OneToMany(mappedBy = "member")
@@ -137,7 +139,7 @@ public class Member extends AbstractAuditingEntity implements Serializable {
 
     //결제 테이블 매핑 설정
     @OneToMany(mappedBy = "member")
-    private List<Payment> payments;
+    private List<Order> orders;
 
     @Override
     public String toString() {
@@ -161,7 +163,6 @@ public class Member extends AbstractAuditingEntity implements Serializable {
                 "isDeleted = " + getIsDeleted() + ", " +
                 "isBlacklist = " + getIsBlacklist() + ", " +
                 "memberState = " + getMemberState() + ", " +
-                "memberCard = " + getMemberCard() + ", " +
                 "createdDate = " + getCreatedDate() + ", " +
                 "updatedDate = " + getUpdatedDate() + ")";
     }
