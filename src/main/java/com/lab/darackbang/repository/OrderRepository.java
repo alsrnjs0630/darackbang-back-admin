@@ -1,6 +1,5 @@
 package com.lab.darackbang.repository;
 
-import com.lab.darackbang.entity.Cart;
 import com.lab.darackbang.entity.Order;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

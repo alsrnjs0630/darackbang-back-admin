@@ -1,6 +1,7 @@
 package com.lab.darackbang.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -135,6 +136,7 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     //productImages 매핑 설정
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
+    @JsonIgnoreProperties("product")  // 순환 참조 방지
     private List<ProductImage> productImages;
 
     // QandA 테이블 (qanda) 매핑 설정

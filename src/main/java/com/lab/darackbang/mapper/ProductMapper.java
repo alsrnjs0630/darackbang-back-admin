@@ -46,6 +46,9 @@ public interface ProductMapper {
 
     @AfterMapping
     default void setDefaultValues(@MappingTarget ProductDTO productDTO) {
+
+        productDTO.setCategory(productDTO.getCategory().equals("L01")? "잎차":productDTO.getCategory().equals("B01")? "티백":"열매");
+
         productDTO.setProductImages(
                 productDTO.getProductImages().stream()
                         .filter(productImage -> Boolean.FALSE.equals(productImage.getIsDeleted())) // isDeleted가 false인 항목만 필터링

@@ -71,6 +71,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/admin/logout").permitAll()// 로그아웃 요청은 인증 없이 허용
                                 .requestMatchers("/admin/products/**").permitAll()// 상품리스트 요청은 인증 없이 허용
+                                .requestMatchers("/admin/orders/**").permitAll()// 상품리스트 요청은 인증 없이 허용
                                 .requestMatchers("/admin/members/**").permitAll()// 상품리스트 요청은 인증 없이 허용
                         /*.requestMatchers("/api/products/**").hasAnyRole("USER", "MANAGER","ADMIN") // 상품리스틑 요청은 해당롤만 허용 */)
                 // 예외 처리 설정

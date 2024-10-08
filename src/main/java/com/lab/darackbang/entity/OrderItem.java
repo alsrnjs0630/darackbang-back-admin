@@ -1,5 +1,7 @@
 package com.lab.darackbang.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +33,7 @@ public class OrderItem extends AbstractAuditingEntity implements Serializable {
     //구매내역아이디
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonIgnore
     private Order order;
 
     //상품금액

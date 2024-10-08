@@ -1,5 +1,6 @@
 package com.lab.darackbang.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,5 +41,11 @@ public class ProductImage implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     @ToString.Exclude
+    @JsonIgnoreProperties(
+            value = {
+                    "ProductImages",
+            },
+            allowSetters = true
+    )
     private Product product;
 }

@@ -1,5 +1,6 @@
 package com.lab.darackbang.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,6 +36,7 @@ public class Order extends AbstractAuditingEntity implements Serializable {
     //orderItems 매핑 설정
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
+    @JsonIgnoreProperties("order")  // 순환 참조 방지
     private List<OrderItem> orderItems;
 
     // 회원아이디
