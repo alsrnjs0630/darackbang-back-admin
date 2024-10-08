@@ -75,7 +75,6 @@ public class ProductServiceImpl implements ProductService {
 
         return Map.of("RESULT", "SUCCESS");
     }
-
     /**
      * 주어진 검색 조건 및 페이징 정보를 기반으로 모든 제품 목록을 조회합니다.
      *
@@ -149,7 +148,6 @@ public class ProductServiceImpl implements ProductService {
         // Retrieve and map product entity
 
         Product product = productRepository.findById(productReqDTO.getId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
-
 
         //객체 복사
         BeanUtils.copyProperties(productReqDTO, product, "productImages", "id");

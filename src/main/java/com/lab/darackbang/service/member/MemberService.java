@@ -15,9 +15,14 @@ public interface MemberService {
 
     MemberReqDTO findOne(Long id);
 
-    //회원 탈퇴 처리
-    Map<String, String> delete(Long id);
-
     Map<String,String> update(MemberDTO memberDTO);
+
+    Map<String,String> withdraw(Long id);
+
+    Map<String,String> blacklist(Long id);
+
+    Map<String,String> unblacklist(Long id);
+
+    Map<String,String> active(Long id);
 
 }

@@ -34,8 +34,10 @@ public interface MemberMapper {
 
         if (memberDTO.getMemberState().equals("01")) {
             memberDTO.setMemberState("활동중");
-        } else {
+        } else if(memberDTO.getMemberState().equals("02")){
             memberDTO.setMemberState("탈퇴");
+        }else{
+            memberDTO.setMemberState("탈퇴대기");
         }
     }
 }

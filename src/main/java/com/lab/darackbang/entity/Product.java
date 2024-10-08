@@ -12,7 +12,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
 @Table(name = "tbl_product")
 public class Product extends AbstractAuditingEntity implements Serializable {
 

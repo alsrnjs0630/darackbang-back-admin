@@ -32,19 +32,19 @@ public class MemberRepositoryTest {
     void insertTest(){
         for(int i=1; i<=10 ;i++ ){
 
-            Member member = Member.builder() // 필수 기입 사항 설정
-                    .userEmail("user"+String.valueOf(i)+"@test.com")
-                    .password(passwordEncoder.encode("1234"))
-                    .name("user"+String.valueOf(i))
-                    .birthday("20240302")
-                    .ageGroup("20")
-                    .gender("F")
-                    .mobileNo("01028810137")
-                    .mileage(0)
-                    .isBlacklist(false)
-                    .isDeleted(false)
-                    .memberState("01")
-                    .build();
+            Member member = new Member();
+            member.setUserEmail("user"+String.valueOf(i)+"@test.com");
+            member.setPassword(passwordEncoder.encode("1234"));
+            member.setName("user"+String.valueOf(i));
+            member.setBirthday("20240302");
+            member.setAgeGroup("20");
+            member.setGender("F");
+            member.setMobileNo("01028810137");
+            member.setMileage(0);
+            member.setIsBlacklist(false);
+            member.setIsDeleted(false);
+            member.setMemberState("01");
+
 
             List<MemberRole> memberRoles = new ArrayList<>();
 

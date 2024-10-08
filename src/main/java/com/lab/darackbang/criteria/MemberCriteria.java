@@ -48,13 +48,13 @@ public class MemberCriteria {
             //사용자 블랙리스트 처리
             if (dto.getIsBlacklist() != null) {
                 log.info("blackList: {}", dto.getIsBlacklist());
-                spec = spec.and((root1, query1, cb) -> cb.like(root1.get("blackList"), "%" + dto.getIsBlacklist() + "%"));
+                spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("isBlacklist"), dto.getIsBlacklist()));
             }
 
             //사용자 성별 gender 필터 추가
-            if (dto.getGender() != null) {
+            if (dto.getGender() != null && !dto.getGender().isEmpty()) {
                 log.info("gender: {}", dto.getGender());
-                spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("gender"), dto.getGender().equals("남자")? "M":"F"));
+                spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("gender"), dto.getGender()));
             }
 
             //검색 필터 조건이 있으면 아래 추가함.

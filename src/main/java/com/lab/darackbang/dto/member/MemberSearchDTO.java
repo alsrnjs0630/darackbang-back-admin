@@ -8,18 +8,10 @@ import lombok.ToString;
 @Getter
 @ToString
 public class MemberSearchDTO {
-
     private String userEmail;
-
     private String name;
-
     private String gender;
-
-
     private String phoneNo;
-
     private Boolean isBlacklist;
-
-
     private String memberState;
 }

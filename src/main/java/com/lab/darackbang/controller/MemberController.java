@@ -43,14 +43,48 @@ public class MemberController {
         return memberService.findOne(id);
     }
 
-    @DeleteMapping("/{id}")
-    public Map<String, String> delete(@PathVariable Long id) {
-        return memberService.delete(id);
-    }
-
     @PutMapping("")
     public Map<String, String> update(MemberDTO memberDTO){
         return memberService.update(memberDTO);
     }
 
+
+    /**
+     * 사용자 제활성화
+     * @param id
+     * @return
+     */
+    @PutMapping("/active/{id}")
+    public Map<String, String> active(@PathVariable Long id){
+        return memberService.active(id);
+    }
+
+    /**
+     * 사용자 블랙컨슈머 해제
+     * @param id
+     * @return
+     */
+    @PutMapping("/unblacklist/{id}")
+    public Map<String, String> unblacklist(@PathVariable Long id){
+        return memberService.unblacklist(id);
+    }
+
+    /**
+     * 사용자 블랙컨슈머 지정
+     * @param id
+     * @return
+     */
+    @PutMapping("/blacklist/{id}")
+    public Map<String, String> blacklist(@PathVariable Long id){
+        return memberService.blacklist(id);
+    }
+    /**
+     * 사용자 탈퇴
+     * @param id
+     * @return
+     */
+    @PutMapping("/withdraw/{id}")
+    public Map<String, String> withdraw(@PathVariable Long id){
+        return memberService.withdraw(id);
+    }
 }

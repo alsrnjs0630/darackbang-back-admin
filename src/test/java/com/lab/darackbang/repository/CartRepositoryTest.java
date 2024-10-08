@@ -32,7 +32,7 @@ public class CartRepositoryTest {
 
         List<CartItem> cartItemList = new ArrayList<>();
 
-        for(int i=1; i<=3; i++) {
+        for(int i=2; i<=4; i++) {
             Product product = productRepository.findById(Long.parseLong(String.valueOf(i))).orElseThrow();
             CartItem cartItem = CartItem.builder()
                             .cart(cart)

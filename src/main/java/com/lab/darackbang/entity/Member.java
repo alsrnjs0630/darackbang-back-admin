@@ -2,11 +2,9 @@ package com.lab.darackbang.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+
 
 import java.io.Serializable;
 import java.util.List;
@@ -141,29 +139,5 @@ public class Member extends AbstractAuditingEntity implements Serializable {
     @OneToMany(mappedBy = "member")
     private List<Order> orders;
 
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + getId() + ", " +
-                "userEmail = " + getUserEmail() + ", " +
-                "password = " + getPassword() + ", " +
-                "name = " + getName() + ", " +
-                "birthday = " + getBirthday() + ", " +
-                "ageGroup = " + getAgeGroup() + ", " +
-                "gender = " + getGender() + ", " +
-                "mobileNo = " + getMobileNo() + ", " +
-                "phoneNo = " + getPhoneNo() + ", " +
-                "address = " + getAddress() + ", " +
-                "postNo = " + getPostNo() + ", " +
-                "shippingAddr = " + getShippingAddr() + ", " +
-                "shipPostNo = " + getShipPostNo() + ", " +
-                "addShippingAddr = " + getAddShippingAddr() + ", " +
-                "addPostNo = " + getAddPostNo() + ", " +
-                "mileage = " + getMileage() + ", " +
-                "isDeleted = " + getIsDeleted() + ", " +
-                "isBlacklist = " + getIsBlacklist() + ", " +
-                "memberState = " + getMemberState() + ", " +
-                "createdDate = " + getCreatedDate() + ", " +
-                "updatedDate = " + getUpdatedDate() + ")";
-    }
+
 }

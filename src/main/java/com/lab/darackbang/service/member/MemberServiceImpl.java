@@ -6,7 +6,6 @@ import com.lab.darackbang.dto.member.MemberDTO;
 import com.lab.darackbang.dto.member.MemberReqDTO;
 import com.lab.darackbang.dto.member.MemberSearchDTO;
 import com.lab.darackbang.entity.Member;
-import com.lab.darackbang.entity.Product;
 import com.lab.darackbang.exception.MemberNotFoundException;
 import com.lab.darackbang.mapper.MemberMapper;
 import com.lab.darackbang.mapper.MemberReqMapper;
@@ -21,14 +20,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 
@@ -57,24 +56,83 @@ public class MemberServiceImpl implements MemberService{
         return memberRepository.findById(id).map(memberReqMapper::toDTO).orElseThrow(MemberNotFoundException::new);
     }
 
+
     @Override
-    public Map<String, String> delete(Long id) {
-        return memberRepository.findById(id).map(product -> {
-            product.setIsDeleted(true);
-            memberRepository.save(product);
+    public Map<String, String> update(MemberDTO memberDTO) {
+
+
+        log.info("memberDTO----------->:{}", memberDTO);
+
+        Member member = memberRepository.findById(memberDTO.getId()).orElseThrow(MemberNotFoundException::new);
+
+        BeanUtils.copyProperties(memberDTO, member, "id", "userEmail", "password", "name",
+                "birthday", "ageGroup", "gender", "mobileNo", "phoneNo",
+                "mileage", "memberRoles", "isDeleted", "isBlacklist",
+                "memberState", "createdDate","updatedDate");
+
+        memberRepository.save(member);
+
+        return Map.of("RESULT", "SUCCESS");
+    }
+
+    @Override
+    public Map<String, String> withdraw(Long id) {
+        return memberRepository.findById(id).map(member -> {
+            member.setIsDeleted(true);
+            member.setMemberState("02");
+            member.setMileage(0);
+            memberRepository.save(member);
+            return Map.of("RESULT", "SUCCESS");
+        }).orElseThrow(MemberNotFoundException::new);
+
+    }
+
+    @Override
+    public Map<String, String> blacklist(Long id) {
+
+        return memberRepository.findById(id).map(member -> {
+            member.setIsBlacklist(true);
+            memberRepository.save(member);
             return Map.of("RESULT", "SUCCESS");
         }).orElseThrow(MemberNotFoundException::new);
     }
 
     @Override
-    public Map<String, String> update(MemberDTO memberDTO) {
+    public Map<String, String> unblacklist(Long id) {
 
-        Member member = memberRepository.findById(memberDTO.getId()).orElseThrow(MemberNotFoundException::new);
+        return memberRepository.findById(id).map(member -> {
+            member.setIsBlacklist(false);
+            memberRepository.save(member);
+            return Map.of("RESULT", "SUCCESS");
+        }).orElseThrow(MemberNotFoundException::new);
+    }
 
-        BeanUtils.copyProperties(memberDTO, member, "id","memberRoles","isDeleted");
+    @Override
+    public Map<String, String> active(Long id) {
 
-        memberRepository.save(member);
+        AtomicReference<String> message = new AtomicReference<>("");
 
-        return Map.of("RESULT", "SUCCESS");
+        return memberRepository.findById(id).map(member -> {
+            memberRepository.findByUserEmail(member.getUserEmail()).ifPresentOrElse(
+                    exitMember -> {
+                        if(exitMember.getIsDeleted()){
+                            message.set("SUCCESS");
+                            member.setIsDeleted(false);
+                            member.setMemberState("01");
+                            memberRepository.save(member);
+                        }else{
+                            message.set("Failed");
+                        }
+                    },
+                    () -> {
+                        message.set("SUCCESS");
+                        member.setIsDeleted(false);
+                        member.setMemberState("01");
+                        memberRepository.save(member);
+                    }
+            );
+            return Map.of("RESULT", message.get());
+
+        }).orElseThrow(MemberNotFoundException::new);
     }
 }
