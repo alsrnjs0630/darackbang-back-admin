@@ -13,6 +13,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -49,5 +50,16 @@ public class OrderDTO implements Serializable {
     // 회원아이디
     @Schema(description = "사용자정보", required = false)
     private MemberDTO member;
-    
+
+    /**
+     * 생성일자
+     */
+    @Schema(description = "생성일자", example = "2023-01-01T10:00:00")
+    private LocalDateTime createdDate;
+
+    /**
+     * 수정일자
+     */
+    @Schema(description = "수정일자", example = "2023-01-02T10:00:00")
+    private LocalDateTime updatedDate;
 }

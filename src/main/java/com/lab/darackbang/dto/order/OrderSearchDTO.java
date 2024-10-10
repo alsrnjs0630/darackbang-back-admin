@@ -19,4 +19,7 @@ public class OrderSearchDTO {
     @Schema(description = "구매자", required = false)
     private String userEmail;
 
+    @Schema(description = "구매자명", required = false)
+    private String name;
+
 }

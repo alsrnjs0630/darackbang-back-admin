@@ -32,6 +32,16 @@ public class OrderCriteria {
                 });
             }
 
+            if (dto.getName() != null && !dto.getName().isEmpty()) {
+                spec = spec.and((root1, query1, cb) -> {
+                    // Subscribe 엔티티와 Product 엔티티를 Join하여 productName 필드에 접근
+                    Join<Object, Object> memberJoin = root1.join("member", JoinType.INNER);
+                    // productName이 검색 키워드를 포함하는지 검사 (LIKE 쿼리 사용)
+                    return cb.like(memberJoin.get("name"), "%" + dto.getName() + "%");
+                });
+            }
+
+
             //사용자 이름
             if (dto.getTotalOrderPrice() != null) {
                 log.info("name: {}", dto.getTotalOrderPrice());
