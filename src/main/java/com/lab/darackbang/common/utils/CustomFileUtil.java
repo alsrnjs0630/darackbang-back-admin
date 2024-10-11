@@ -122,7 +122,7 @@ public class CustomFileUtil {
         Resource resource = new FileSystemResource(uploadPath+File.separator+fileName);
 
         if(!resource.exists()){
-            resource = new FileSystemResource(uploadPath+File.separator+"default,jpg");
+            resource = new FileSystemResource(uploadPath+File.separator+"default.png");
         }
 
         HttpHeaders httpHeaders = new HttpHeaders();
