@@ -134,5 +134,63 @@ public class StatRepositoryTest {
     }
 
 
+    @Test
+    void insertproduct() {
+        Member member = memberRepository.findById(5L).orElseThrow();
+
+
+        Optional<Order> order =  orderRepository.findByMemberId(member.getId());
+
+        if(order.isPresent()) {
+
+       
+
+            order.get().getOrderItems().forEach(orderItem -> {
+
+                ProductMonthStat productMonthStat = new ProductMonthStat();
+                productMonthStat.setYear(String.valueOf(order.get().getCreatedDate().getYear()));
+                productMonthStat.setMonth(String.valueOf(order.get().getCreatedDate().getMonthValue()));
+                productMonthStat.setProductName(orderItem.getProduct().getProductName());
+                if(productMonthStat.getSaleTotalPrice()!=null){
+                    productMonthStat.setSaleTotalPrice(productMonthStat.getSaleTotalPrice()+(orderItem.getProductPrice()*orderItem.getProductQuantity()));
+                }else{
+                    productMonthStat.setSaleTotalPrice((orderItem.getProductPrice()*orderItem.getProductQuantity()));
+                }
+
+                productMonthStatRepository.save(productMonthStat);
+
+                ProductQuarterStat productQuarterStat = new ProductQuarterStat();
+                productQuarterStat.setYear(String.valueOf(order.get().getCreatedDate().getYear()));
+                productQuarterStat.setQuarter(String.valueOf((order.get().getCreatedDate().getMonthValue() - 1) / 3 + 1));
+                productQuarterStat.setProductName(orderItem.getProduct().getProductName());
+
+                if(productQuarterStat.getSaleTotalPrice()!=null){
+                    productQuarterStat.setSaleTotalPrice(productQuarterStat.getSaleTotalPrice()+(orderItem.getProductPrice()*orderItem.getProductQuantity()));
+                }else{
+                    productQuarterStat.setSaleTotalPrice((orderItem.getProductPrice()*orderItem.getProductQuantity()));
+                }
+
+
+                productQuarterStatRepository.save(productQuarterStat);
+
+                ProductYearStat productYearStat = new ProductYearStat();
+                productYearStat.setYear(String.valueOf(order.get().getCreatedDate().getYear()));
+
+                if(productYearStat.getSaleTotalPrice()!=null){
+                    productYearStat.setSaleTotalPrice(productYearStat.getSaleTotalPrice()+(orderItem.getProductPrice()*orderItem.getProductQuantity()));
+                }else{
+                    productYearStat.setSaleTotalPrice((orderItem.getProductPrice()*orderItem.getProductQuantity()));
+                }
+
+                productYearStat.setProductName(orderItem.getProduct().getProductName());
+                productYearStatRepository.save(productYearStat);
+
+            });
+
+
+
+        }
+
+    }
 
 }

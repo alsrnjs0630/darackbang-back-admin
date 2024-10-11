@@ -11,9 +11,6 @@ public interface PaymentMapper {
 
     PaymentDTO toDTO(Payment payment);
 
-    @Mapping(source = "order.orderItems", target = "order.orderItems")
-    @Mapping(source = "order.member",target = "order.member")
-    Payment toEntity(PaymentDTO paymentDTO);  // Corrected to map to Order instead of Product
 
 
     @AfterMapping

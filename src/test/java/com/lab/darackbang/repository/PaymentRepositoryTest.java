@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @SpringBootTest
@@ -38,6 +41,8 @@ public class PaymentRepositoryTest {
 
         //이 상품 정보와 사용자 정보를 가지고  Order 정보를 만든다.
 
+        long timestamp = Long.parseLong("1727255778");
+
         Payment payment = new Payment();
         payment.setBuyerAddr("서울특별시 강남구 삼성동");
         payment.setBuyerEmail("user10@test.com");
@@ -51,7 +56,7 @@ public class PaymentRepositoryTest {
         payment.setMerchantUid("PNO_10_202410100920");
         payment.setName("히비스커스 선샤인 외 2건");
         payment.setPaidAmount(120000);
-        payment.setPaidAt("1727255778");
+        payment.setPaidAt( LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault()));
         payment.setPayMethod("point");
         payment.setPgProvider("kakaopay");
         payment.setPgTid("T6f3d4c37f575eb00738");

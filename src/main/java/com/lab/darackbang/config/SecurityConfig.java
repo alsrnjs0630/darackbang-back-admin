@@ -74,6 +74,7 @@ public class SecurityConfig {
                                 .requestMatchers("/admin/orders/**").permitAll()// 주문 요청은 인증 없이 허용
                                 .requestMatchers("/admin/members/**").permitAll()// 사용자 요청은 인증 없이 허용
                                 .requestMatchers("/admin/payments/**").permitAll()// 결제 요청은 인증 없이 허용
+                                .requestMatchers("/admin/statistics/**").permitAll()// 결제 요청은 인증 없이 허용
                         /*.requestMatchers("/api/products/**").hasAnyRole("USER", "MANAGER","ADMIN") // 상품리스틑 요청은 해당롤만 허용 */)
                 // 예외 처리 설정
                 .exceptionHandling(exceptions -> exceptions
