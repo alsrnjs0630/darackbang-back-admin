@@ -18,5 +18,14 @@ public interface OrderMapper {
 
     OrderDTO toDTO(Order order);
 
+    @Mapping(target = "orderItems", ignore = true)
+    @Mapping(target = "member.memberRoles", ignore = true)
+    @Mapping(target = "member.memberCard", ignore = true)
+    @Mapping(target = "member.subscribes", ignore = true)
+    @Mapping(target = "member.cart", ignore = true)
+    @Mapping(target = "member.qandas", ignore = true)
+    @Mapping(target = "member.wishlists", ignore = true)
+    @Mapping(target = "member.productReviews", ignore = true)
+    @Mapping(target = "member.orders", ignore = true)
     Order toEntity(OrderDTO orderDTO);  // Corrected to map to Order instead of Product
 }

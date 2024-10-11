@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // 세션 관리 설정 (JWT 사용 및 세션 상태 없음으로 설정)
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // 세션을 상태 없음으로 설정 (JWT 사용을 위해)
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                         .maximumSessions(1)  // 동시에 하나의 세션만 허용
                         .expiredUrl("/login?expired"))  // 세션 만료 시 리디렉션할 URL
                 // CSRF 방지 비활성화 (JWT 방식에서 보통 사용하지 않음)
@@ -70,9 +70,10 @@ public class SecurityConfig {
                 // 인증 요청에 대한 권한 설정
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/admin/logout").permitAll()// 로그아웃 요청은 인증 없이 허용
-                                .requestMatchers("/admin/products/**").permitAll()// 상품리스트 요청은 인증 없이 허용
-                                .requestMatchers("/admin/orders/**").permitAll()// 상품리스트 요청은 인증 없이 허용
-                                .requestMatchers("/admin/members/**").permitAll()// 상품리스트 요청은 인증 없이 허용
+                                .requestMatchers("/admin/products/**").permitAll()// 상품 요청은 인증 없이 허용
+                                .requestMatchers("/admin/orders/**").permitAll()// 주문 요청은 인증 없이 허용
+                                .requestMatchers("/admin/members/**").permitAll()// 사용자 요청은 인증 없이 허용
+                                .requestMatchers("/admin/payments/**").permitAll()// 결제 요청은 인증 없이 허용
                         /*.requestMatchers("/api/products/**").hasAnyRole("USER", "MANAGER","ADMIN") // 상품리스틑 요청은 해당롤만 허용 */)
                 // 예외 처리 설정
                 .exceptionHandling(exceptions -> exceptions

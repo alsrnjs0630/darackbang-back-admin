@@ -1,5 +1,6 @@
 package com.lab.darackbang.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -115,24 +116,23 @@ public class Member extends AbstractAuditingEntity implements Serializable {
     )
     private List<Subscribe> subscribes;
 
-    // 구매내역 테이블 (구매내역) 매핑 설정
-    @OneToMany(mappedBy = "member")
-    private List<Order> orderHistories;
-
     // 장바구니 테이블 (cart) 매핑 설정
-    @OneToMany(mappedBy = "member")
-    private List<Cart> carts;
+    @OneToOne(mappedBy = "member")
+    private Cart cart;
 
     // QandA 테이블 (qanda) 매핑 설정
     @OneToMany(mappedBy = "member")
+    @JsonIgnore
     private List<Qanda> qandas;
 
     // 관심상품 테이블 매핑 설정
     @OneToMany(mappedBy = "member")
+    @JsonIgnore
     private List<WishList> wishlists;
 
     // 구매후기 테이블 매핑 설정
     @OneToMany(mappedBy = "member")
+    @JsonIgnore
     private List<ProductReview> productReviews;
 
     //결제 테이블 매핑 설정

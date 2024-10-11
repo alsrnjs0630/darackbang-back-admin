@@ -25,7 +25,7 @@ public class Cart   extends AbstractAuditingEntity  implements Serializable {
     private Long id;
 
     // 회원아이디
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
