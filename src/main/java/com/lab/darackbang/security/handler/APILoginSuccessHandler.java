@@ -5,7 +5,7 @@ import com.lab.darackbang.security.dto.LoginDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -13,25 +13,31 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
-@Log4j2
+
+@Slf4j
 public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        LoginDTO loginDTO = (LoginDTO) authentication.getPrincipal();
-        Map<String, Object> claims = loginDTO.getClaims();
 
-        Gson gson = new Gson();
-        String jsonStr = gson.toJson(claims);
+        log.info("로그인 성공...");
+        log.info("사용자 권한: {}", authentication.getAuthorities());
 
-        response.setContentType("application/json; charset=UTF-8");
-        PrintWriter printWriter = response.getWriter();
-        printWriter.println(jsonStr);
-        printWriter.close();
+        if (authentication.getPrincipal() instanceof LoginDTO loginDTO) {
+            log.info("사용자 객체: {}", loginDTO);
 
-        // 리디렉션 추가
-        //response.sendRedirect("/api/home"); // 성공 후 리디렉션할 URL
+            response.setContentType("application/json; charset=UTF-8");
+            try (PrintWriter writer = response.getWriter()) {
+                writer.println(new Gson().toJson(loginDTO.getInfo()));
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json; charset=UTF-8");
+            try (PrintWriter writer = response.getWriter()) {
+                writer.println(new Gson().toJson(Map.of("error", "ACCESSDENIED")));
+            }
+        }
     }
 }

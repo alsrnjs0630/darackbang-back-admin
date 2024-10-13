@@ -33,7 +33,7 @@ public class MemberRepositoryTest {
         for(int i=1; i<=10 ;i++ ){
 
             Member member = new Member();
-            member.setUserEmail("user"+String.valueOf(i)+"@test.com");
+            member.setUserEmail("user"+String.valueOf(i)+"@darackbang.com");
             member.setPassword(passwordEncoder.encode("1234"));
             member.setName("user"+String.valueOf(i));
             member.setBirthday("20240302");

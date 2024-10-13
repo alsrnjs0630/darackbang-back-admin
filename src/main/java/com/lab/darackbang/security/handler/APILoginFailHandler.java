@@ -18,15 +18,12 @@ public class APILoginFailHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        log.info("Login fail.....{}", exception);
-
-        Gson gson = new Gson();
-
-        String jsonStr = gson.toJson(Map.of("error", "ERROR_LOGIN"));
+        log.info("로그인 실패.....{}", exception);
 
         response.setContentType("application/json");
-        PrintWriter printWriter = response.getWriter();
-        printWriter.println(jsonStr);
-        printWriter.close();
+
+        try (PrintWriter writer = response.getWriter()) {
+            writer.println(new Gson().toJson(Map.of("error", "ERROR_LOGIN")));
+        }
     }
 }

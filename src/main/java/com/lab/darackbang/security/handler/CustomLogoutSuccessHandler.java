@@ -21,14 +21,10 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
                                 HttpServletResponse response,
                                 Authentication authentication) throws IOException {
 
-        Map<String, String> message = Map.of("RESULT","LOGOUT SUCCESS");
-
-        Gson gson = new Gson();
-        String jsonStr = gson.toJson(message);
-
         response.setContentType("application/json; charset=UTF-8");
-        PrintWriter printWriter = response.getWriter();
-        printWriter.println(jsonStr);
-        printWriter.close();
+
+        try (PrintWriter writer = response.getWriter()) {
+            writer.println(new Gson().toJson(Map.of("RESULT", "LOGOUT SUCCESS")));
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.lab.darackbang.controller.advice;
 import com.lab.darackbang.exception.MemberNotFoundException;
 import com.lab.darackbang.exception.ProductNotFoundException;
 import com.lab.darackbang.exception.NotFoundException;
+import com.lab.darackbang.exception.RoleAccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +57,11 @@ public class CustomControllerAdvice {
     @ExceptionHandler(MemberNotFoundException.class)
     protected ResponseEntity<?> handleMemberNotFoundException(MemberNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("msg","사용자 정보를 찾을 수 없습니다."));
+    }
+
+    @ExceptionHandler(RoleAccessDeniedException.class)
+    protected ResponseEntity<?> RoleAccessDeniedException(RoleAccessDeniedException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("msg","접근 권한이 없습니다."));
     }
 
 

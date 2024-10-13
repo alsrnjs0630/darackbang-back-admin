@@ -1,27 +1,22 @@
 package com.lab.darackbang.config;
 
-import com.lab.darackbang.security.handler.APILoginFailHandler;
-import com.lab.darackbang.security.handler.APILoginSuccessHandler;
-import com.lab.darackbang.security.handler.CustomAccessDeniedHandler;
-import com.lab.darackbang.security.handler.CustomLogoutSuccessHandler;
+import com.lab.darackbang.security.handler.*;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpSessionEvent;
-import jakarta.servlet.http.HttpSessionListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -44,12 +39,12 @@ public class SecurityConfig {
         return http
                 // CORS 설정
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                // 세션 관리 설정 (JWT 사용 및 세션 상태 없음으로 설정)
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                        .maximumSessions(1)  // 동시에 하나의 세션만 허용
-                        .expiredUrl("/login?expired"))  // 세션 만료 시 리디렉션할 URL
-                // CSRF 방지 비활성화 (JWT 방식에서 보통 사용하지 않음)
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)  // 세션을 항상 생성하여 유지
+                        .maximumSessions(1)  // 동시 접속을 1로 제한
+                        .maxSessionsPreventsLogin(false)
+                        .expiredSessionStrategy(new CustomSessionExpiredHandler())  // 세션 만료 처리 핸들러 설정// 세션 초과 시 새로운 로그인 허용
+                )
                 .csrf(AbstractHttpConfigurer::disable)
                 // 로그인 설정
                 .formLogin(login -> login
@@ -59,26 +54,29 @@ public class SecurityConfig {
                 // 로그아웃 설정
                 .logout(logout -> logout
                         .logoutUrl("/admin/logout")  // 로그아웃 URL
+                        .clearAuthentication(true)
                         .addLogoutHandler((request, response, authentication) -> {
-                            // Clear the authentication information
+                            // 인증 정보를 삭제합니다
                             HttpSession session = request.getSession();
                             session.invalidate();  // 세션 무효화
                         })
-                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
                         .logoutSuccessHandler(new CustomLogoutSuccessHandler())
-                        .deleteCookies("JSESSIONID", "access_token"))  // 쿠키 삭제
+                )  // 쿠키 삭제
                 // 인증 요청에 대한 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/admin/logout").permitAll()// 로그아웃 요청은 인증 없이 허용
-                                .requestMatchers("/admin/products/**").permitAll()// 상품 요청은 인증 없이 허용
-                                .requestMatchers("/admin/orders/**").permitAll()// 주문 요청은 인증 없이 허용
-                                .requestMatchers("/admin/members/**").permitAll()// 사용자 요청은 인증 없이 허용
-                                .requestMatchers("/admin/payments/**").permitAll()// 결제 요청은 인증 없이 허용
-                                .requestMatchers("/admin/statistics/**").permitAll()// 결제 요청은 인증 없이 허용
-                        /*.requestMatchers("/api/products/**").hasAnyRole("USER", "MANAGER","ADMIN") // 상품리스틑 요청은 해당롤만 허용 */)
+                        .requestMatchers("/admin/logout").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/admin/products/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/admin/orders/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/admin/payments/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/admin/statistics/**").hasAnyRole("ADMIN", "MANAGER")
+                        .anyRequest().authenticated())  // 그 외의 모든 요청은 인증 필요
                 // 예외 처리 설정
                 .exceptionHandling(exceptions -> exceptions
-                        .accessDeniedHandler(new CustomAccessDeniedHandler()))  // 접근 권한 없을 시 처리 핸들러
+                        .accessDeniedHandler(new CustomAccessDeniedHandler()))
+                // SecurityContext를 세션에 저장하도록 설정
+                .securityContext(securityContext -> securityContext
+                        .securityContextRepository(new HttpSessionSecurityContextRepository()))
                 .build();
     }
 
@@ -108,27 +106,10 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // 세션 이벤트를 처리하고 세션의 상태를 추적하는 Bean (HttpSessionEventPublisher 사용)
+    // HttpSessionEventPublisher Bean 추가 (세션 무효화 및 동시 세션 관리를 위한 설정)
     @Bean
-    public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
-        return new ServletListenerRegistrationBean<>(new HttpSessionEventPublisher());
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 
-    // 세션 생성 및 종료 시 동작을 정의하는 HttpSessionListener Bean
-    @Bean
-    public HttpSessionListener httpSessionListener() {
-        return new HttpSessionListener() {
-            // 세션 생성 시 타임아웃 설정 (1800초 = 30분)
-            @Override
-            public void sessionCreated(HttpSessionEvent se) {
-                se.getSession().setMaxInactiveInterval(1800);  // 세션 타임아웃 30분 설정
-            }
-
-            // 세션 종료 시 동작 (필요 시 정의)
-            @Override
-            public void sessionDestroyed(HttpSessionEvent se) {
-                // 세션 종료 시 별도 작업 필요할 경우 정의 가능
-            }
-        };
-    }
 }
