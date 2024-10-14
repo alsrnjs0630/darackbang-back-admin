@@ -88,6 +88,7 @@ public class StatRepositoryTest {
             order.get().getOrderItems().forEach(orderItem -> {
 
                 ProductMonthStat productMonthStat = new ProductMonthStat();
+                productMonthStat.setPno(orderItem.getProduct().getPno());
                 productMonthStat.setYear(String.valueOf(order.get().getCreatedDate().getYear()));
                 productMonthStat.setMonth(String.valueOf(order.get().getCreatedDate().getMonthValue()));
                 productMonthStat.setProductName(orderItem.getProduct().getProductName());
@@ -100,6 +101,7 @@ public class StatRepositoryTest {
                 productMonthStatRepository.save(productMonthStat);
 
                 ProductQuarterStat productQuarterStat = new ProductQuarterStat();
+                productQuarterStat.setPno(orderItem.getProduct().getPno());
                 productQuarterStat.setYear(String.valueOf(order.get().getCreatedDate().getYear()));
                 productQuarterStat.setQuarter(String.valueOf((order.get().getCreatedDate().getMonthValue() - 1) / 3 + 1));
                 productQuarterStat.setProductName(orderItem.getProduct().getProductName());
@@ -114,6 +116,7 @@ public class StatRepositoryTest {
                 productQuarterStatRepository.save(productQuarterStat);
 
                 ProductYearStat productYearStat = new ProductYearStat();
+                productYearStat.setPno(orderItem.getProduct().getPno());
                 productYearStat.setYear(String.valueOf(order.get().getCreatedDate().getYear()));
 
                 if(productYearStat.getSaleTotalPrice()!=null){

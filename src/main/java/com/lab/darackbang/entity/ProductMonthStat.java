@@ -23,6 +23,10 @@ public class ProductMonthStat extends AbstractAuditingEntity implements Serializ
     @Column(name = "id", nullable = false)
     private Long id;
 
+    //상품번호
+    @Column(name = "pno", nullable = false, length = 12)
+    private String pno;
+
     // 상품명
     @Column(name = "product_name", nullable = false, length = 50)
     private String productName;
