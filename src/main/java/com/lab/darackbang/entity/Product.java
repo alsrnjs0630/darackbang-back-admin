@@ -108,7 +108,7 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     private Integer quantity;
 
     //상품포장수량
-    @Column(name = "package_quatnity", nullable = true, length = 7)
+    @Column(name = "package_quantity", nullable = true, length = 7)
     private Integer packageQuantity;
 
     //소비기한
