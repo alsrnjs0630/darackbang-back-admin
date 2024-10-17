@@ -9,7 +9,7 @@ spring:
       max-request-size: 30MB
 
   datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
+    driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@192.168.0.231:1521:xe
     username: darackbangadmin
     password: darackbangadmin
@@ -18,7 +18,11 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
+        transaction:
+          jta:
+            platform: org.springframework.orm.hibernate5.SpringJtaPlatform
         format_sql: true
+        dialect: org.hibernate.community.dialect.OracleLegacyDialect
     show-sql: true
     open-in-view: true
 

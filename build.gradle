@@ -57,6 +57,9 @@ dependencies {
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
 
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-community-dialects
+    implementation 'org.hibernate:hibernate-community-dialects:6.4.4.Final'
 }
 
 tasks.named('test') {
