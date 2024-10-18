@@ -41,4 +41,4 @@ server:
   servlet:
     session:
       timeout: 30m  # 세션 타임아웃을 30분으로 설정
-  port: 8080
+  port: 8081
