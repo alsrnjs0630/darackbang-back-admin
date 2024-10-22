@@ -7,8 +7,11 @@ import com.lab.darackbang.entity.Product;
 import com.lab.darackbang.entity.Role;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Subquery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.Objects;
 
 /**
  * ProductCriteria 클래스는 ProductSearchDTO 엔티티에 대한 검색 조건(Specification)을 정의하는 클래스입니다.
@@ -61,10 +64,19 @@ public class MemberCriteria {
                 spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("gender"), dto.getGender()));
             }
 
-            // 사용자 롤이  "ADMIN" or "MANAGER" 사용자 제외
-            Join<Member, MemberRole> roleJoin = root.join("memberRoles", JoinType.LEFT);
-            spec = spec.and((root1, query1, cb) -> cb.not(roleJoin.get("role").in(Role.ADMIN, Role.MANAGER)));
 
+            // "ADMIN" 또는 "MANAGER" 역할을 가진 사용자를 제외하는 서브쿼리 추가
+            Subquery<Long> subquery = Objects.requireNonNull(query).subquery(Long.class);
+            var subRoot = subquery.from(MemberRole.class);
+            subquery.select(subRoot.get("member").get("id"))
+                    .where(subRoot.get("role").in("ADMIN", "MANAGER"));
+
+            spec = spec.and((root1, query1, cb) -> {
+                // "ADMIN" 또는 "MANAGER" 역할이 있는 사용자의 ID를 제외
+                return cb.not(root1.get("id").in(subquery));
+            });
+
+            Objects.requireNonNull(query).distinct(true);
             //검색 필터 조건이 있으면 아래 추가함.
 
             //삭제 처리된 사용자 조회 대상에서 제외
