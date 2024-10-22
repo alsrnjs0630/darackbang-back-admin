@@ -2,7 +2,11 @@ package com.lab.darackbang.criteria;
 
 import com.lab.darackbang.dto.member.MemberSearchDTO;
 import com.lab.darackbang.entity.Member;
+import com.lab.darackbang.entity.MemberRole;
 import com.lab.darackbang.entity.Product;
+import com.lab.darackbang.entity.Role;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -56,6 +60,13 @@ public class MemberCriteria {
                 log.info("gender: {}", dto.getGender());
                 spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("gender"), dto.getGender()));
             }
+
+
+
+            // Exclude users with roles "ADMIN" or "MANAGER"
+            Join<Member, MemberRole> roleJoin = root.join("memberRoles", JoinType.LEFT);
+            spec = spec.and((root1, query1, cb) -> cb.not(roleJoin.get("role").in(Role.ADMIN, Role.MANAGER)));
+
 
             //검색 필터 조건이 있으면 아래 추가함.
 
