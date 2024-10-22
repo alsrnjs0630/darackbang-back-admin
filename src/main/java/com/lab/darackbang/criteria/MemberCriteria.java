@@ -61,16 +61,13 @@ public class MemberCriteria {
                 spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("gender"), dto.getGender()));
             }
 
-
-
-            // Exclude users with roles "ADMIN" or "MANAGER"
+            // 사용자 롤이  "ADMIN" or "MANAGER" 사용자 제외
             Join<Member, MemberRole> roleJoin = root.join("memberRoles", JoinType.LEFT);
             spec = spec.and((root1, query1, cb) -> cb.not(roleJoin.get("role").in(Role.ADMIN, Role.MANAGER)));
 
-
             //검색 필터 조건이 있으면 아래 추가함.
 
-            //삭제 처리된 상품은 조회 대상에서 제외
+            //삭제 처리된 사용자 조회 대상에서 제외
             //spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("isDeleted"),false));
 
             return spec.toPredicate(root, query, criteriaBuilder);
