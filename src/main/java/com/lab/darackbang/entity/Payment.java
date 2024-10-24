@@ -110,7 +110,7 @@ public class Payment extends AbstractAuditingEntity implements Serializable {
     private String pgProvider;
 
     //PG사 거래번호
-    @Column(name = "pg_tid", nullable = true, length = 30)
+    @Column(name = "pg_tid", nullable = true, length = 150)
     private String pgTid;
 
     // 결제 타입
