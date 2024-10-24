@@ -8,7 +8,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
     @Bean
-    WebClient webClient(){
-        return WebClient.builder().exchangeStrategies(ExchangeStrategies.builder().codecs(clientCodecConfigurer ->clientCodecConfigurer.defaultCodecs().maxInMemorySize(-1)).build()).baseUrl("http://localhost:8000").build();
+    WebClient webClient() {
+        return WebClient.builder()
+                .exchangeStrategies(ExchangeStrategies.builder()
+                        .codecs(clientCodecConfigurer -> clientCodecConfigurer
+                                .defaultCodecs().maxInMemorySize(-1))
+                        .build())
+                .baseUrl("http://localhost:8000")
+                .build();
     }
 }
