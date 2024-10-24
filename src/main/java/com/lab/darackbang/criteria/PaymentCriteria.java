@@ -19,7 +19,7 @@ public class PaymentCriteria {
 
             Specification<Payment> spec = Specification.where(null);
 
-            if (dto.getPgProvider() != null) {
+            if (dto.getPgProvider() != null && !dto.getPgProvider().isEmpty()) {
                 log.info("payMethod: {}", dto.getPgProvider());
                 spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("pgProvider"),  dto.getPgProvider() ));
             }
@@ -37,7 +37,7 @@ public class PaymentCriteria {
             }
 
             //사용자 이름
-            if (dto.getPaidAmount() != null) {
+            if (dto.getPaidAmount() != null && dto.getPaidAmount() != 0 ) {
                 log.info("paidAmount: {}", dto.getPaidAmount());
                 spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("paidAmount"),  dto.getPaidAmount() ));
             }
