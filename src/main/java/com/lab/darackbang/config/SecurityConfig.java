@@ -68,10 +68,12 @@ public class SecurityConfig {
                         .requestMatchers("/admin/orders/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/admin/payments/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/admin/statistics/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/admin/analyzes/**").hasAnyRole("ADMIN", "MANAGER")
                         .anyRequest().authenticated())  // 그 외의 모든 요청은 인증 필요
                 // 예외 처리 설정
                 .exceptionHandling(exceptions -> exceptions
-                        .accessDeniedHandler(new CustomAccessDeniedHandler()))
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())  // 권한 부족 시 처리 핸들러
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))  // 인증되지 않은 사용자 처리 핸들러 추가
                 // SecurityContext를 세션에 저장하도록 설정
                 .securityContext(securityContext -> securityContext
                         .securityContextRepository(new HttpSessionSecurityContextRepository()))
