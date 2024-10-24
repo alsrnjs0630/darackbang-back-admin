@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.darackbang.common.utils.CustomFileUtil;
+import com.lab.darackbang.common.utils.ImageAnalyzeUtil;
 import com.lab.darackbang.criteria.ProductCriteria;
 import com.lab.darackbang.dto.common.FileInfoDTO;
 import com.lab.darackbang.dto.common.PageDTO;
@@ -16,6 +17,7 @@ import com.lab.darackbang.exception.ProductNotFoundException;
 import com.lab.darackbang.mapper.PageMapper;
 import com.lab.darackbang.mapper.ProductMapper;
 import com.lab.darackbang.mapper.ProductReqMapper;
+import com.lab.darackbang.repository.ImageAnalyzeRepository;
 import com.lab.darackbang.repository.ProductImageRepository;
 import com.lab.darackbang.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +28,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.util.*;
@@ -54,7 +60,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductReqMapper productReqMapper;
 
     private final PageMapper pageMapper;
+
     private final CustomFileUtil customFileUtil;
+
+    private final ImageAnalyzeUtil imageAnalyzeUtil;
+
+    private final ImageAnalyzeRepository imageAnalyzeRepository;
+
 
     @Override
     public Map<String, String> create(ProductDTO productDTO, List<MultipartFile> files, List<MultipartFile> descFiles) throws IOException {
@@ -72,6 +84,10 @@ public class ProductServiceImpl implements ProductService {
 
         product.setProductImages(imageList);
         productRepository.save(product);
+
+        //이미지 분석 모듈 추가
+        Optional.ofNullable(imageAnalyzeUtil.imageAnalyze(files, descFiles))
+                .ifPresent(imageAnalyzeRepository::saveAll);
 
         return Map.of("RESULT", "SUCCESS");
     }
@@ -165,8 +181,10 @@ public class ProductServiceImpl implements ProductService {
         List<ProductImage> newProductImages = new ArrayList<>();
 
         if (files != null) {
+
             newProductImages.addAll(updateNewProductImagesFromFiles(files, product, "INFO"));
         }
+
         if (descFiles != null) {
             newProductImages.addAll(updateNewProductImagesFromFiles(descFiles, product, "DESC"));
         }
@@ -178,6 +196,9 @@ public class ProductServiceImpl implements ProductService {
         product.setProductImages(existingImages);
 
         productRepository.save(product);
+
+        Optional.ofNullable(imageAnalyzeUtil.imageAnalyze(files, descFiles))
+                .ifPresent(imageAnalyzeRepository::saveAll);
 
         return Map.of("RESULT", "SUCCESS");
     }
@@ -271,5 +292,7 @@ public class ProductServiceImpl implements ProductService {
             return null;  // 패턴이 없을 경우 null 반환
         }
     }
+
+
 }
 

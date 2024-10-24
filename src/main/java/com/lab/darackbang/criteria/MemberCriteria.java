@@ -14,7 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.Objects;
 
 /**
- * ProductCriteria 클래스는 ProductSearchDTO 엔티티에 대한 검색 조건(Specification)을 정의하는 클래스입니다.
+ * MemberCriteria 클래스는 MemberSearchDTO 엔티티에 대한 검색 조건(Specification)을 정의하는 클래스입니다.
  * 이 클래스는 동적 쿼리를 생성하는 데 사용되며, 다양한 검색 필터를 제공하여
  * 데이터베이스에서 원하는 조건에 맞는 데이터를 조회할 수 있도록 합니다.
  */
@@ -63,7 +63,6 @@ public class MemberCriteria {
                 log.info("gender: {}", dto.getGender());
                 spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("gender"), dto.getGender()));
             }
-
 
             // "ADMIN" 또는 "MANAGER" 역할을 가진 사용자를 제외하는 서브쿼리 추가
             Subquery<Long> subquery = Objects.requireNonNull(query).subquery(Long.class);
