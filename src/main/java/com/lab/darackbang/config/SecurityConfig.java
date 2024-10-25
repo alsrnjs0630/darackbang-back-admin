@@ -69,6 +69,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/payments/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/admin/statistics/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/admin/analyzes/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/admin/events/**").hasAnyRole("ADMIN", "MANAGER")
                         .anyRequest().authenticated())  // 그 외의 모든 요청은 인증 필요
                 // 예외 처리 설정
                 .exceptionHandling(exceptions -> exceptions

@@ -33,7 +33,10 @@ import java.util.regex.Pattern;
 public class CustomFileUtil {
 
     @Value("${com.lab.upload.path}")
-    private  String uploadPath;
+    private String uploadPath;
+
+    @Value("${com.lab.eventUpload.path}")
+    private String eventUploadPath;
 
     /**
      * 프로젝트 실행시 무조건 실행
@@ -49,30 +52,39 @@ public class CustomFileUtil {
 
         log.info("******파일 업로드 경로:{}", uploadPath);
 
+        Path eventFolderPath = Paths.get(eventUploadPath);
+        // 디렉토리가 존재하지 않으면 생성하고, 이미 존재하면 아무 작업도 하지 않음
+        Files.createDirectories(eventFolderPath);
+        // 절대 경로로 변환
+        eventUploadPath = eventFolderPath.toAbsolutePath().toString();
+
+        log.info("******이벤트 파일 업로드 경로:{}", eventUploadPath);
+
     }
 
     /**
      * 이미지 파일 저장및 썸네일 이미지 생성
+     *
      * @param files
      * @return 이미지 파일명 리스트 리턴
      * @throws IOException
      */
     public List<String> saveProductDescFiles(List<MultipartFile> files) throws IOException {
 
-        if(files==null || files.isEmpty()){
+        if (files == null || files.isEmpty()) {
             return null;
         }
 
         List<String> uploadNames = new ArrayList<>();
 
-        files.forEach(uploadFile->{
-            String savedName = UUID.randomUUID().toString()+"_"+uploadFile.getOriginalFilename();
-            Path savePath = Paths.get(uploadPath,savedName);
-            try{
+        files.forEach(uploadFile -> {
+            String savedName = UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
+            Path savePath = Paths.get(uploadPath, savedName);
+            try {
                 Files.copy(uploadFile.getInputStream(), savePath);
                 uploadNames.add(savedName);
-            }catch(IOException e){
-                throw  new RuntimeException(e.getMessage());
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
             }
         });
 
@@ -81,53 +93,56 @@ public class CustomFileUtil {
 
     /**
      * 이미지 파일 저장및 썸네일 이미지 생성
+     *
      * @param files
      * @return 이미지 파일명 리스트 리턴
      * @throws IOException
      */
     public List<String> saveProductInfoFiles(List<MultipartFile> files) throws IOException {
 
-        if(files==null || files.isEmpty()){
+        if (files == null || files.isEmpty()) {
             return null;
         }
 
         List<String> uploadNames = new ArrayList<>();
 
-        files.forEach(uploadFile->{
-            String savedName = UUID.randomUUID().toString()+"_"+uploadFile.getOriginalFilename();
-            Path savePath = Paths.get(uploadPath,savedName);
-            try{
+        files.forEach(uploadFile -> {
+            String savedName = UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
+            Path savePath = Paths.get(uploadPath, savedName);
+            try {
                 Files.copy(uploadFile.getInputStream(), savePath);
 
                 //썸네일 생성
                 String contentType = uploadFile.getContentType();
-                if(contentType!=null && contentType.startsWith("image")){
-                    Path thumbPath = Paths.get(uploadPath,"thumbnail_"+savedName);
-                    Thumbnails.of(savePath.toFile()).size(400,400).toFile(thumbPath.toFile());
+                if (contentType != null && contentType.startsWith("image")) {
+                    Path thumbPath = Paths.get(uploadPath, "thumbnail_" + savedName);
+                    Thumbnails.of(savePath.toFile()).size(400, 400).toFile(thumbPath.toFile());
                 }
                 uploadNames.add(savedName);
-            }catch(IOException e){
-                throw  new RuntimeException(e.getMessage());
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
             }
         });
 
         return uploadNames;
     }
+
     /**
      * 업로드 이미지 가져 뷰에서 보기
+     *
      * @param fileName
      * @return
      */
-    public ResponseEntity<Resource> getFile(String fileName){
-        Resource resource = new FileSystemResource(uploadPath+File.separator+fileName);
+    public ResponseEntity<Resource> getFile(String fileName) {
+        Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
 
-        if(!resource.exists()){
-            resource = new FileSystemResource(uploadPath+File.separator+"default.png");
+        if (!resource.exists()) {
+            resource = new FileSystemResource(uploadPath + File.separator + "default.png");
         }
 
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        try{
+        try {
             httpHeaders.add("Content-Type", Files.probeContentType(resource.getFile().toPath()));
 
         } catch (IOException e) {
@@ -135,62 +150,62 @@ public class CustomFileUtil {
         }
         return ResponseEntity.ok().headers(httpHeaders).body(resource);
     }
+
     /**
      * 사용자가 삭제한 파일 리스트 물리적으로 삭제(원본이미지, 썸네일 이미지)
+     *
      * @param fileNames
      */
-    public void deleteFile(List<String> fileNames){
+    public void deleteFile(List<String> fileNames) {
 
-        if(fileNames==null || fileNames.isEmpty()){
+        if (fileNames == null || fileNames.isEmpty()) {
             return;
         }
 
-        fileNames.forEach(fileName->{
+        fileNames.forEach(fileName -> {
 
-            String thumbNailFileName = "s_"+fileName;
-            Path thumbNailPath = Paths.get(uploadPath,thumbNailFileName);
-            Path filePath = Paths.get(uploadPath,fileName);
+            String thumbNailFileName = "s_" + fileName;
+            Path thumbNailPath = Paths.get(uploadPath, thumbNailFileName);
+            Path filePath = Paths.get(uploadPath, fileName);
 
-            try{
+            try {
                 Files.deleteIfExists(filePath);
                 Files.deleteIfExists(thumbNailPath);
-            }catch (IOException e){
-                throw  new RuntimeException(e.getMessage());
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
             }
         });
-
     }
-
-
 
     /**
      * 이미지 파일 저장및 썸네일 이미지 생성
+     *
      * @param files
      * @return 이미지 파일명 리스트 리턴
      * @throws IOException
      */
     public List<FileInfoDTO> updateNewProductDescFiles(List<MultipartFile> files) throws IOException {
 
-        if(files==null || files.isEmpty()){
+        if (files == null || files.isEmpty()) {
             return null;
         }
 
         List<FileInfoDTO> uploadFileInfo = new ArrayList<>();
 
-        files.forEach(uploadFile->{
+        files.forEach(uploadFile -> {
 
-            FileInfoDTO fileInfoDTO = parseFileName(uploadFile.getOriginalFilename(),"DESC");
+            FileInfoDTO fileInfoDTO = parseFileName(uploadFile.getOriginalFilename(), "DESC");
 
-            String savedName = UUID.randomUUID().toString()+"_"+fileInfoDTO.getFileName();
+            String savedName = UUID.randomUUID().toString() + "_" + fileInfoDTO.getFileName();
 
             fileInfoDTO.setFileName(savedName);
 
-            Path savePath = Paths.get(uploadPath,savedName);
-            try{
+            Path savePath = Paths.get(uploadPath, savedName);
+            try {
                 Files.copy(uploadFile.getInputStream(), savePath);
                 uploadFileInfo.add(fileInfoDTO);
-            }catch(IOException e){
-                throw  new RuntimeException(e.getMessage());
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
             }
         });
 
@@ -199,39 +214,40 @@ public class CustomFileUtil {
 
     /**
      * 이미지 파일 저장및 썸네일 이미지 생성
+     *
      * @param files
      * @return 이미지 파일명 리스트 리턴
      * @throws IOException
      */
     public List<FileInfoDTO> updateNewProductInfoFiles(List<MultipartFile> files) throws IOException {
 
-        if(files==null || files.isEmpty()){
+        if (files == null || files.isEmpty()) {
             return null;
         }
 
         List<FileInfoDTO> uploadFileInfo = new ArrayList<>();
 
-        files.forEach(uploadFile->{
+        files.forEach(uploadFile -> {
 
-            FileInfoDTO fileInfoDTO = parseFileName(uploadFile.getOriginalFilename(),"INFO");
+            FileInfoDTO fileInfoDTO = parseFileName(uploadFile.getOriginalFilename(), "INFO");
 
-            String savedName = UUID.randomUUID().toString()+"_"+fileInfoDTO.getFileName();
+            String savedName = UUID.randomUUID().toString() + "_" + fileInfoDTO.getFileName();
 
             fileInfoDTO.setFileName(savedName);
 
-            Path savePath = Paths.get(uploadPath,savedName);
-            try{
+            Path savePath = Paths.get(uploadPath, savedName);
+            try {
                 Files.copy(uploadFile.getInputStream(), savePath);
 
                 //썸네일 생성
                 String contentType = uploadFile.getContentType();
-                if(contentType!=null && contentType.startsWith("image")){
-                    Path thumbPath = Paths.get(uploadPath,"thumbnail_"+savedName);
-                    Thumbnails.of(savePath.toFile()).size(400,400).toFile(thumbPath.toFile());
+                if (contentType != null && contentType.startsWith("image")) {
+                    Path thumbPath = Paths.get(uploadPath, "thumbnail_" + savedName);
+                    Thumbnails.of(savePath.toFile()).size(400, 400).toFile(thumbPath.toFile());
                 }
                 uploadFileInfo.add(fileInfoDTO);
-            }catch(IOException e){
-                throw  new RuntimeException(e.getMessage());
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
             }
         });
 
@@ -245,6 +261,7 @@ public class CustomFileUtil {
 
     /**
      * 이미지파일명 앞에 있는 시퀀스 번호 추출
+     *
      * @param fileName
      * @return
      */
@@ -275,4 +292,30 @@ public class CustomFileUtil {
             return "default"; // 언더스코어가 없을 경우 null 반환
         }
     }
+
+    /**
+     * 이벤트 이미지 파일 저장및 썸네일 이미지 생성
+     *
+     * @param file
+     * @return 이벤트 이미지 파일명 리턴
+     * @throws IOException
+     */
+    public String saveEventFile(MultipartFile file) throws IOException {
+
+        if (file == null) {
+            return null;
+        }
+
+        String savedName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        Path savePath = Paths.get(uploadPath, savedName);
+        try {
+            Files.copy(file.getInputStream(), savePath);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return savedName;
+    }
+
 }
