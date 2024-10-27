@@ -2,22 +2,20 @@ package com.lab.darackbang.service.event;
 
 import com.lab.darackbang.common.utils.CustomFileUtil;
 import com.lab.darackbang.criteria.EventCriteria;
-import com.lab.darackbang.criteria.ProductCriteria;
 import com.lab.darackbang.dto.common.PageDTO;
 import com.lab.darackbang.dto.event.EventDTO;
 import com.lab.darackbang.dto.event.EventSearchDTO;
-import com.lab.darackbang.dto.product.ProductDTO;
-import com.lab.darackbang.dto.product.ProductSearchDTO;
 import com.lab.darackbang.entity.Event;
-import com.lab.darackbang.entity.Product;
 import com.lab.darackbang.mapper.EventMapper;
 import com.lab.darackbang.mapper.PageMapper;
 import com.lab.darackbang.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,7 +50,7 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
-     * 주어진 검색 조건 및 페이징 정보를 기반으로 모든 제품 목록을 조회합니다.
+     * 주어진 검색 조건 및 페이징 정보를 기반으로 모든 이벤트 목록을 조회합니다.
      *
      * @param searchDTO 제품 검색 조건을 담고 있는 DTO
      * @param pageable  페이징 처리를 위한 Pageable 객체
@@ -74,4 +72,22 @@ public class EventServiceImpl implements EventService {
         // JPA 리포지토리를 사용하여 페이징을 적용한 상품 목록 조회 후, ProductMapper를 통해 ProductDTO로 변환
         return pageMapper.toDTO(eventRepository.findAll(spec, correctedPageable).map(eventMapper::toDTO), searchDTO);
     }
+
+    // 이벤트 상세정보
+    @Override
+    public EventDTO read(Long id) {
+        return eventMapper.toDTO(eventRepository.findById(id).orElse(null));
+    }
+
+    // 이벤트 이미지 보기
+    @Override
+    public ResponseEntity<Resource> getFile(String fileName) {
+        return customFileUtil.getEventFile(fileName);
+    }
+
+    @Override
+    public Map<String, String> update(EventDTO eventDTO, MultipartFile file) throws IOException {
+        return Map.of();
+    }
+
 }

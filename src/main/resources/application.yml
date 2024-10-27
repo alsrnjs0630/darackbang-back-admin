@@ -36,6 +36,8 @@ com:
   lab:
     upload:
       path: C:\darackbang\upload
+    eventUpload:
+      path: C:\darackbang\upload\event
 
 server:
   servlet:

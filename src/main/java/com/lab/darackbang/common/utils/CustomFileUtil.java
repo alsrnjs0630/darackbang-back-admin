@@ -307,7 +307,7 @@ public class CustomFileUtil {
         }
 
         String savedName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        Path savePath = Paths.get(uploadPath, savedName);
+        Path savePath = Paths.get(eventUploadPath, savedName);
         try {
             Files.copy(file.getInputStream(), savePath);
 
@@ -316,6 +316,30 @@ public class CustomFileUtil {
         }
 
         return savedName;
+    }
+
+    /**
+     * 이벤트 이미지 가져 뷰에서 보기
+     *
+     * @param fileName
+     * @return
+     */
+    public ResponseEntity<Resource> getEventFile(String fileName) {
+        Resource resource = new FileSystemResource(eventUploadPath + File.separator + fileName);
+
+        if (!resource.exists()) {
+            resource = new FileSystemResource(eventUploadPath + File.separator + "default.png");
+        }
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        try {
+            httpHeaders.add("Content-Type", Files.probeContentType(resource.getFile().toPath()));
+
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok().headers(httpHeaders).body(resource);
     }
 
 }
